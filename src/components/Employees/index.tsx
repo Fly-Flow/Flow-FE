@@ -7,7 +7,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Stack,
+  FormGroup,
+  FormLabel,
   Table,
   TableBody,
   TableCell,
@@ -81,14 +82,18 @@ const Employees: React.FC = (props) => {
       {renderToolbar()}
 
       <Dialog open={employeesDialog} onClose={closeDialog}>
-        <DialogTitle>구성원 추가</DialogTitle>
+        <DialogTitle textAlign="center">구성원 추가</DialogTitle>
         <DialogContent>
-          <Stack>
-            <TextField size="small" label="이름" />
-            <TextField size="small" label="부서" />
-            <TextField size="small" label="직급" />
-            <TextField size="small" label="입사 일자" />
-          </Stack>
+          <FormGroup>
+            <FormLabel>이름</FormLabel>
+            <TextField size="small" />
+            <FormLabel>부서</FormLabel>
+            <TextField size="small" />
+            <FormLabel>직급</FormLabel>
+            <TextField size="small" />
+            <FormLabel>입사 일자</FormLabel>
+            <TextField type="date" size="small" />
+          </FormGroup>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>취소</Button>
