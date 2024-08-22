@@ -9,6 +9,8 @@ import {
   DialogTitle,
   FormGroup,
   FormLabel,
+  IconButton,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Employees: React.FC = (props) => {
   const [employeesDialog, setEmployeesDialog] = useState(false);
@@ -46,9 +49,20 @@ const Employees: React.FC = (props) => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingX: "2rem",
         }}
       >
-        <TextField size="small" label="이름" />
+        <TextField
+          size="small"
+          label="이름"
+          InputProps={{
+            endAdornment: (
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            ),
+          }}
+        />
         <Button variant="contained" onClick={openDialog}>
           구성원 추가
         </Button>
@@ -58,7 +72,7 @@ const Employees: React.FC = (props) => {
 
   const renderTable = () => {
     return (
-      <TableContainer>
+      <TableContainer sx={{ paddingX: "2rem" }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -77,7 +91,7 @@ const Employees: React.FC = (props) => {
   };
 
   return (
-    <>
+    <Stack gap="1.5rem">
       {renderHeader()}
       {renderToolbar()}
 
@@ -104,7 +118,7 @@ const Employees: React.FC = (props) => {
       </Dialog>
 
       {renderTable()}
-    </>
+    </Stack>
   );
 };
 
