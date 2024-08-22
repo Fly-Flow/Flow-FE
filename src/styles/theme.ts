@@ -7,7 +7,7 @@ const theme = createTheme({
       dark: "#006BA7",
     },
     secondary: {
-      main: "#57C3FF",
+      main: "#90D6FE",
     },
     background: {
       default: "#FFFCF0",
