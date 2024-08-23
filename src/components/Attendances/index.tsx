@@ -8,10 +8,10 @@ const Attendances: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
 
   const tabLabels = [
-    <Typography key="myAttendance" variant="h6" sx={{ cursor: "default" }}>
+    <Typography key={currentTab} variant="h5">
       나의 출퇴근
     </Typography>,
-    <Typography key="allAttendance" variant="h6" sx={{ cursor: "default" }}>
+    <Typography key={currentTab} variant="h5">
       전체 출퇴근
     </Typography>,
   ];
