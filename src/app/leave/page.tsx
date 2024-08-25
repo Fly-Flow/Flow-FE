@@ -1,10 +1,8 @@
-"use client";
-
-import Header from "@/components/shared/Header";
+import Leave from "@/components/Leave";
 import SideBar from "@/components/shared/SideBar";
 import { Box } from "@mui/material";
 
-export default function Home() {
+const LeavePage = () => {
   return (
     <>
       <SideBar />
@@ -15,8 +13,10 @@ export default function Home() {
           padding: "1rem",
         }}
       >
-        <Header header="홈" />
+        <Leave />
       </Box>
     </>
   );
-}
+};
+
+export default LeavePage;
