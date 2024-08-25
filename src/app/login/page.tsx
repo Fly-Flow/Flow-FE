@@ -1,9 +1,9 @@
-import LoginPresentation from "@/components/Login/LoginPresentation.tsx";
+import Login from "@/components/Login/LoginContainer.tsx";
 
 const LoginPage = () => {
   return (
     <>
-      <LoginPresentation />
+      <Login />
     </>
   );
 };
