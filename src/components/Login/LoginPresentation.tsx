@@ -7,6 +7,7 @@ import {
   Typography,
   Avatar,
   TextField,
+  useTheme,
 } from "@mui/material";
 
 type LoginProps = {
@@ -17,6 +18,7 @@ type LoginProps = {
 
 const LoginPresentation: React.FC<LoginProps> = (props) => {
   const { onEmployeeNumberChange, onPasswordChange, onClick } = props;
+  const theme = useTheme();
 
   return (
     <Stack
@@ -25,7 +27,7 @@ const LoginPresentation: React.FC<LoginProps> = (props) => {
       sx={{
         backgroundColor: "common.white",
         borderRadius: "1.875rem",
-        boxShadow: "0rem 0.25rem 0.25rem 0rem rgba(0, 0, 0, 0.25)",
+        boxShadow: `0rem 0.25rem 0.25rem 0rem ${theme.palette.grey[500]}`,
       }}
     >
       <FormGroup sx={{ gap: "1rem", alignItems: "center" }}>
