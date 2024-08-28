@@ -4,27 +4,30 @@ import React, { useEffect, useState } from "react";
 import BasicTabs from "../shared/BasicTabs";
 import { Box, Typography } from "@mui/material";
 
-function getCurrentDateTime() {
+function getCurrentDate() {
   const now = new Date();
-  const date = new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
 
+  return `${year}-${month}-${day}`;
+}
+
+function getCurrentTime() {
   const time = new Intl.DateTimeFormat("ko-KR", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
     hour12: false,
-  }).format(now);
-
-  return `${date} ${time}`;
+  }).format(new Date());
+  return `${time}`;
 }
 
 const Attendances: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const [currentDateTime, setCurrentDateTime] = useState(getCurrentDateTime());
+  const [currentDate, setCurrentDate] = useState(getCurrentDate());
+  const [currentTime, setCurrentTime] = useState(getCurrentTime());
+  const [hasMounted, setHasMounted] = useState(false);
 
   const tabLabels = [
     <Typography key={currentTab} variant="h5">
@@ -37,7 +40,9 @@ const Attendances: React.FC = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentDateTime(getCurrentDateTime());
+      setHasMounted(true);
+      setCurrentDate(getCurrentDate());
+      setCurrentTime(getCurrentTime());
     }, 1000);
 
     return () => clearInterval(timer);
@@ -46,7 +51,29 @@ const Attendances: React.FC = () => {
   const renderMyAttendances = () => {
     return (
       <>
-        <Typography>{currentDateTime}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            width: "25rem",
+            height: "3.5rem",
+            borderRadius: "0.5rem",
+            backgroundColor: "white",
+            boxShadow: 2,
+            cursor: "default",
+          }}
+        >
+          <Typography color="primary.main" variant="subtitle1">
+            {currentDate}
+          </Typography>
+          <Typography color="primary.main" variant="subtitle1">
+            {"|"}
+          </Typography>
+          <Typography color="primary.main" variant="subtitle1">
+            {currentTime}
+          </Typography>
+        </Box>
       </>
     );
   };
@@ -68,7 +95,7 @@ const Attendances: React.FC = () => {
       />
       <Box>
         <Box sx={{ padding: "1rem" }}>
-          {currentTab === 0 && renderMyAttendances()}
+          {currentTab === 0 && hasMounted && renderMyAttendances()}
           {currentTab === 1 && renderAllAttendances()}
         </Box>
       </Box>
