@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import BasicTabs from "../shared/BasicTabs";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 
 function getCurrentDate() {
   const now = new Date();
@@ -28,6 +28,8 @@ const Attendances: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(getCurrentDate());
   const [currentTime, setCurrentTime] = useState(getCurrentTime());
   const [hasMounted, setHasMounted] = useState(false);
+  const [clockInTime, setClockInTime] = useState<string | null>(null);
+  const [clockOutTime, setClockOutTime] = useState<string | null>(null);
 
   const tabLabels = [
     <Typography key={currentTab} variant="h5">
@@ -48,9 +50,19 @@ const Attendances: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handleClockIn = () => {
+    if (!clockInTime) {
+      setClockInTime(getCurrentTime());
+    }
+  };
+
+  const handleClockOut = () => {
+    setClockOutTime(getCurrentTime());
+  };
+
   const renderMyAttendances = () => {
     return (
-      <>
+      <Stack gap="1rem">
         <Box
           sx={{
             display: "flex",
@@ -58,8 +70,8 @@ const Attendances: React.FC = () => {
             alignItems: "center",
             width: "25rem",
             height: "3.5rem",
-            borderRadius: "0.5rem",
             backgroundColor: "white",
+            borderRadius: "0.5rem",
             boxShadow: 2,
             cursor: "default",
           }}
@@ -74,7 +86,60 @@ const Attendances: React.FC = () => {
             {currentTime}
           </Typography>
         </Box>
-      </>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            width: "30rem",
+            height: "3.5rem",
+            backgroundColor: "white",
+            borderRadius: "0.5rem",
+            border: "1px solid",
+            borderColor: "primary.main",
+          }}
+        >
+          <Typography variant="subtitle1" color="primary.main">
+            {clockInTime ? clockInTime : "출근 전"}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={handleClockIn}
+            disabled={!!clockInTime}
+            sx={{
+              color: "primary.dark",
+              backgroundColor: "secondary.main",
+              boxShadow: "none",
+              "&:hover": {
+                color: "white",
+                boxShadow: "none",
+              },
+            }}
+          >
+            출근
+          </Button>
+          <Typography variant="subtitle1" color="primary.main">
+            {clockOutTime ? clockOutTime : "퇴근 전"}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={handleClockOut}
+            disabled={!clockInTime}
+            sx={{
+              color: "primary.dark",
+              backgroundColor: "secondary.main",
+              boxShadow: "none",
+              "&:hover": {
+                color: "white",
+                boxShadow: "none",
+              },
+            }}
+          >
+            퇴근
+          </Button>
+        </Box>
+      </Stack>
     );
   };
 
