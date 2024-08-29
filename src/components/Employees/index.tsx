@@ -3,6 +3,7 @@
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -23,6 +24,19 @@ import {
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Header from "../shared/Header";
+import theme from "@/styles/theme";
+
+type RoleColors = Record<string, string>;
+
+const roleLightColors: RoleColors = {
+  관리자: theme.palette.purple.light,
+  사원: theme.palette.gray.light,
+};
+
+const roleMainColors: RoleColors = {
+  관리자: theme.palette.purple.main,
+  사원: theme.palette.gray.main,
+};
 
 const Employees: React.FC = (props) => {
   const [employeesDialog, setEmployeesDialog] = useState(false);
@@ -116,7 +130,16 @@ const Employees: React.FC = (props) => {
                 <TableCell>{employee.department}</TableCell>
                 <TableCell>{employee.position}</TableCell>
                 <TableCell>{employee.hireDate}</TableCell>
-                <TableCell>{employee.role}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={employee.role}
+                    style={{
+                      backgroundColor: roleLightColors[employee.role],
+                      color: roleMainColors[employee.role],
+                      border: `1px solid ${roleMainColors[employee.role]}`,
+                    }}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
