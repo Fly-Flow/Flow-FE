@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import BasicTabs from "../shared/BasicTabs";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import BasicDatePicker from "../shared/BasicDatePicker";
 
 function getCurrentDate() {
   const now = new Date();
@@ -153,7 +154,11 @@ const Attendances: React.FC = () => {
     );
   };
   const renderDatePicker = () => {
-    return <>datepicker</>;
+    return (
+      <>
+        <BasicDatePicker />
+      </>
+    );
   };
 
   const renderMyAttendances = () => {
