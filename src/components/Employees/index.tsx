@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import Header from "../shared/Header";
 import theme from "@/styles/theme";
 
 type RoleColors = Record<string, string>;
@@ -76,11 +77,7 @@ const Employees: React.FC = (props) => {
   };
 
   const renderHeader = () => {
-    return (
-      <Typography variant="h4" sx={{ cursor: "default" }}>
-        구성원
-      </Typography>
-    );
+    return <Header header="구성원" />;
   };
 
   const renderToolbar = () => {
