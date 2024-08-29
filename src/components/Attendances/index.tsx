@@ -2,8 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import BasicTabs from "../shared/BasicTabs";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import BasicDatePicker from "../shared/BasicDatePicker";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Stack,
+  Typography,
+} from "@mui/material";
+import BasicDateCalendar from "../shared/BasicDateCalendar";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/ko";
+dayjs.locale("ko");
 
 function getCurrentDate() {
   const now = new Date();
@@ -26,11 +36,12 @@ function getCurrentTime() {
 
 const Attendances: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
-  const [currentDate, setCurrentDate] = useState(getCurrentDate());
-  const [currentTime, setCurrentTime] = useState(getCurrentTime());
+  const [currentDate, setCurrentDate] = useState(getCurrentDate()); // 현재 날짜
+  const [currentTime, setCurrentTime] = useState(getCurrentTime()); // 현재 시간
   const [hasMounted, setHasMounted] = useState(false);
-  const [clockInTime, setClockInTime] = useState<string | null>(null);
-  const [clockOutTime, setClockOutTime] = useState<string | null>(null);
+  const [clockInTime, setClockInTime] = useState<string | null>(null); // 출근 시간
+  const [clockOutTime, setClockOutTime] = useState<string | null>(null); // 퇴근 시간
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs()); // 캘린더 선택 날짜
 
   const tabLabels = [
     <Typography key={currentTab} variant="h5">
@@ -153,23 +164,44 @@ const Attendances: React.FC = () => {
       </Box>
     );
   };
-  const renderDatePicker = () => {
+
+  const handleDateChange = (date: Dayjs | null) => {
+    setSelectedDate(date);
+  };
+
+  const renderDateCalendar = () => {
     return (
-      <>
-        <BasicDatePicker />
-      </>
+      <Box sx={{ width: "24rem" }}>
+        <BasicDateCalendar
+          value={selectedDate}
+          onDateChange={handleDateChange}
+        />
+      </Box>
+    );
+  };
+
+  const renderCardInfo = () => {
+    return (
+      <Card sx={{ width: "24rem", borderRadius: "0.5rem", boxShadow: 2 }}>
+        <CardContent>
+          {selectedDate ? selectedDate.format("MM월 DD일 (ddd)") : ""}
+        </CardContent>
+      </Card>
     );
   };
 
   const renderMyAttendances = () => {
     return (
-      <>
+      <Stack gap="2rem">
         <Stack gap="1rem">
           {renderCurrentDateTime()}
           {renderCommute()}
         </Stack>
-        {renderDatePicker()}
-      </>
+        <Stack direction="row" gap="1rem">
+          {renderDateCalendar()}
+          {renderCardInfo()}
+        </Stack>
+      </Stack>
     );
   };
 
