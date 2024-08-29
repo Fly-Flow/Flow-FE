@@ -50,6 +50,34 @@ const Attendances: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const renderCurrentDateTime = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          width: "25rem",
+          height: "3.5rem",
+          backgroundColor: "white",
+          borderRadius: "0.5rem",
+          boxShadow: 2,
+          cursor: "default",
+        }}
+      >
+        <Typography color="primary.main" variant="subtitle1">
+          {currentDate}
+        </Typography>
+        <Typography color="primary.main" variant="subtitle1">
+          {"|"}
+        </Typography>
+        <Typography color="primary.main" variant="subtitle1">
+          {currentTime}
+        </Typography>
+      </Box>
+    );
+  };
+
   const handleClockIn = () => {
     if (!clockInTime) {
       setClockInTime(getCurrentTime());
@@ -60,86 +88,83 @@ const Attendances: React.FC = () => {
     setClockOutTime(getCurrentTime());
   };
 
+  const renderCommute = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          width: "30rem",
+          height: "3.5rem",
+          backgroundColor: "white",
+          borderRadius: "0.5rem",
+          border: "1px solid",
+          borderColor: "primary.main",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          color="primary.main"
+          sx={{ cursor: "default" }}
+        >
+          {clockInTime ? clockInTime : "출근 전"}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={handleClockIn}
+          disabled={!!clockInTime}
+          sx={{
+            color: "primary.dark",
+            backgroundColor: "secondary.main",
+            boxShadow: "none",
+            "&:hover": {
+              color: "white",
+              boxShadow: "none",
+            },
+          }}
+        >
+          출근
+        </Button>
+        <Typography
+          variant="subtitle1"
+          color="primary.main"
+          sx={{ cursor: "default" }}
+        >
+          {clockOutTime ? clockOutTime : "퇴근 전"}
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={handleClockOut}
+          disabled={!clockInTime}
+          sx={{
+            color: "primary.dark",
+            backgroundColor: "secondary.main",
+            boxShadow: "none",
+            "&:hover": {
+              color: "white",
+              boxShadow: "none",
+            },
+          }}
+        >
+          퇴근
+        </Button>
+      </Box>
+    );
+  };
+  const renderDatePicker = () => {
+    return <>datepicker</>;
+  };
+
   const renderMyAttendances = () => {
     return (
-      <Stack gap="1rem">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            width: "25rem",
-            height: "3.5rem",
-            backgroundColor: "white",
-            borderRadius: "0.5rem",
-            boxShadow: 2,
-            cursor: "default",
-          }}
-        >
-          <Typography color="primary.main" variant="subtitle1">
-            {currentDate}
-          </Typography>
-          <Typography color="primary.main" variant="subtitle1">
-            {"|"}
-          </Typography>
-          <Typography color="primary.main" variant="subtitle1">
-            {currentTime}
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            width: "30rem",
-            height: "3.5rem",
-            backgroundColor: "white",
-            borderRadius: "0.5rem",
-            border: "1px solid",
-            borderColor: "primary.main",
-          }}
-        >
-          <Typography variant="subtitle1" color="primary.main">
-            {clockInTime ? clockInTime : "출근 전"}
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={handleClockIn}
-            disabled={!!clockInTime}
-            sx={{
-              color: "primary.dark",
-              backgroundColor: "secondary.main",
-              boxShadow: "none",
-              "&:hover": {
-                color: "white",
-                boxShadow: "none",
-              },
-            }}
-          >
-            출근
-          </Button>
-          <Typography variant="subtitle1" color="primary.main">
-            {clockOutTime ? clockOutTime : "퇴근 전"}
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={handleClockOut}
-            disabled={!clockInTime}
-            sx={{
-              color: "primary.dark",
-              backgroundColor: "secondary.main",
-              boxShadow: "none",
-              "&:hover": {
-                color: "white",
-                boxShadow: "none",
-              },
-            }}
-          >
-            퇴근
-          </Button>
-        </Box>
-      </Stack>
+      <>
+        <Stack gap="1rem">
+          {renderCurrentDateTime()}
+          {renderCommute()}
+        </Stack>
+        {renderDatePicker()}
+      </>
     );
   };
 
