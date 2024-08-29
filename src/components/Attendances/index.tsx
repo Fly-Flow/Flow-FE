@@ -185,6 +185,22 @@ const Attendances: React.FC = () => {
       <Card sx={{ width: "24rem", borderRadius: "0.5rem", boxShadow: 2 }}>
         <CardContent>
           {selectedDate ? selectedDate.format("MM월 DD일 (ddd)") : ""}
+          <Typography>
+            {"출근"}
+            {clockInTime}
+          </Typography>
+          <Typography>
+            {"퇴근"}
+            {clockOutTime}
+          </Typography>
+          <Typography>
+            {"근무 시간"}
+            {}
+          </Typography>
+          <Typography>
+            {"근무 상태"}
+            {}
+          </Typography>
         </CardContent>
       </Card>
     );
