@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/components/Logo/index.tsx";
 import {
   Box,
   Button,
@@ -24,6 +25,14 @@ const SideBar: React.FC = (props) => {
         height: "100%",
       }}
     >
+      <Box
+        display="flex"
+        justifyContent="center"
+        padding="1rem"
+        marginBottom="1rem"
+      >
+        <Logo color="white" />
+      </Box>
       <List sx={{ flexGrow: 1 }}>
         <ListItem disablePadding>
           <ListItemButton

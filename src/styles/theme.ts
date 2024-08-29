@@ -1,4 +1,17 @@
 import { createTheme } from "@mui/material/styles";
+import { PaletteOptions } from "@mui/material/styles/createPalette";
+
+// 기존 MUI Palette 타입을 확장
+declare module "@mui/material/styles/createPalette" {
+  interface Palette {
+    gray: Palette["primary"];
+    purple: Palette["primary"];
+  }
+  interface PaletteOptions {
+    gray?: PaletteOptions["primary"];
+    purple?: PaletteOptions["primary"];
+  }
+}
 
 const theme = createTheme({
   palette: {
