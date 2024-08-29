@@ -9,6 +9,12 @@ import {
   CardContent,
   IconButton,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
@@ -45,6 +51,57 @@ const Attendances: React.FC = () => {
   const [clockInTime, setClockInTime] = useState<string | null>(null); // 출근 시간
   const [clockOutTime, setClockOutTime] = useState<string | null>(null); // 퇴근 시간
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs()); // 캘린더 선택 날짜
+
+  const [commuteList, setCommuteList] = useState([
+    {
+      name: "김결근",
+      department: "개발팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "결근",
+    },
+    {
+      name: "김퇴근",
+      department: "인사팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "퇴근",
+    },
+    {
+      name: "김근무",
+      department: "디자인팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "근무",
+    },
+    {
+      name: "김휴가",
+      department: "마케팅팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "휴가",
+    },
+    {
+      name: "김조퇴",
+      department: "운영팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "조퇴",
+    },
+    {
+      name: "김지각",
+      department: "영업팀",
+      clockInTime: "1234",
+      clockOutTime: "1234",
+      workingHours: "1234",
+      workingStatus: "지각",
+    },
+  ]);
 
   const tabLabels = [
     <Typography key={currentTab} variant="h5">
@@ -249,11 +306,51 @@ const Attendances: React.FC = () => {
     );
   };
 
+  const renderCommuteTable = () => {
+    return (
+      <TableContainer sx={{ paddingX: "2rem" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>이름</TableCell>
+              <TableCell>부서</TableCell>
+              <TableCell>출근 시간</TableCell>
+              <TableCell>퇴근 시간</TableCell>
+              <TableCell>근무 시간</TableCell>
+              <TableCell>근무 상태</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {commuteList.map((list) => (
+              <TableRow key={list.name}>
+                <TableCell>{list.name}</TableCell>
+                <TableCell>{list.department}</TableCell>
+                <TableCell>{list.clockInTime}</TableCell>
+                <TableCell>{list.clockOutTime}</TableCell>
+                <TableCell>{list.workingHours}</TableCell>
+                <TableCell>{list.workingStatus}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   const renderAllAttendances = () => {
     return (
-      <Stack>
-        {renderDateCalendar()}
+      <Stack gap="1rem">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {renderDateCalendar()}
+        </Box>
         {renderSearchbar()}
+        {renderCommuteTable()}
       </Stack>
     );
   };
