@@ -1,4 +1,4 @@
-import Leave from "@/components/Leave";
+import Vacation from "@/components/Vacation";
 import SideBar from "@/components/shared/SideBar";
 import { Box } from "@mui/material";
 
@@ -13,7 +13,7 @@ const LeavePage = () => {
           padding: "1rem",
         }}
       >
-        <Leave />
+        <Vacation />
       </Box>
     </>
   );
