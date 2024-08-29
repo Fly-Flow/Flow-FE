@@ -7,6 +7,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   IconButton,
   Stack,
   Table,
@@ -20,6 +21,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BasicDateCalendar from "../shared/BasicDateCalendar";
+import theme from "@/styles/theme";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 dayjs.locale("ko");
@@ -42,6 +44,26 @@ function getCurrentTime() {
   }).format(new Date());
   return `${time}`;
 }
+
+type StatusColors = Record<string, string>;
+
+const statusLightColors: StatusColors = {
+  결근: theme.palette.error.light,
+  퇴근: theme.palette.success.light,
+  근무: theme.palette.info.light,
+  휴가: theme.palette.success.light,
+  조퇴: theme.palette.warning.light,
+  지각: theme.palette.warning.light,
+};
+
+const statusMainColors: StatusColors = {
+  결근: theme.palette.error.main,
+  퇴근: theme.palette.success.main,
+  근무: theme.palette.info.main,
+  휴가: theme.palette.success.main,
+  조퇴: theme.palette.warning.main,
+  지각: theme.palette.warning.main,
+};
 
 const Attendances: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -328,7 +350,18 @@ const Attendances: React.FC = () => {
                 <TableCell>{list.clockInTime}</TableCell>
                 <TableCell>{list.clockOutTime}</TableCell>
                 <TableCell>{list.workingHours}</TableCell>
-                <TableCell>{list.workingStatus}</TableCell>
+                <TableCell>
+                  <Chip
+                    label={list.workingStatus}
+                    style={{
+                      backgroundColor: statusLightColors[list.workingStatus],
+                      color: statusMainColors[list.workingStatus],
+                      border: `1px solid ${
+                        statusMainColors[list.workingStatus]
+                      }`,
+                    }}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

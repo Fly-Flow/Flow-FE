@@ -21,11 +21,11 @@ const theme = createTheme({
       light: "#FFE8DF",
     },
     success: {
-      main: "#FFE8DF",
+      main: "#2E7D32",
       light: "#C4E6C1",
     },
     info: {
-      main: "#C4E6C1",
+      main: "#0277BD",
       light: "#D3F1FF",
     },
   },
