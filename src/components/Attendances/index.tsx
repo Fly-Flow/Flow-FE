@@ -7,9 +7,12 @@ import {
   Button,
   Card,
   CardContent,
+  IconButton,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import BasicDateCalendar from "../shared/BasicDateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
@@ -221,8 +224,38 @@ const Attendances: React.FC = () => {
     );
   };
 
+  const renderSearchbar = () => {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingX: "2rem",
+        }}
+      >
+        <TextField
+          size="small"
+          label="이름"
+          InputProps={{
+            endAdornment: (
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            ),
+          }}
+        />
+      </Box>
+    );
+  };
+
   const renderAllAttendances = () => {
-    return <>전체 출퇴근 콘텐츠</>;
+    return (
+      <Stack>
+        {renderDateCalendar()}
+        {renderSearchbar()}
+      </Stack>
+    );
   };
 
   const handleTabChange = (newTab: number) => {
