@@ -10,6 +10,7 @@ import {
   FormGroup,
   FormLabel,
   IconButton,
+  Paper,
   Stack,
   Table,
   TableBody,
@@ -101,7 +102,7 @@ const Employees: React.FC = (props) => {
 
   const renderTable = () => {
     return (
-      <TableContainer sx={{ paddingX: "2rem" }}>
+      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
         <Table>
           <TableHead>
             <TableRow>

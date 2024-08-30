@@ -79,7 +79,7 @@ const Vacation: React.FC = () => {
 
   const renderMyVacationTable = () => {
     return (
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
         <Table>
           <TableHead>
             <TableRow>

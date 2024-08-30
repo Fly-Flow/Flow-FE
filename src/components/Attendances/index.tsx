@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   IconButton,
+  Paper,
   Stack,
   Table,
   TableBody,
@@ -303,7 +304,7 @@ const Attendances: React.FC = () => {
 
   const renderCommuteTable = () => {
     return (
-      <TableContainer sx={{ paddingX: "2rem" }}>
+      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
         <Table>
           <TableHead>
             <TableRow>
