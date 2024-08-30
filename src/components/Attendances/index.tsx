@@ -24,6 +24,7 @@ import BasicDateCalendar from "../shared/BasicDateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import Chip from "@/components/shared/Chip/index.tsx";
+import SearchField from "@/components/shared/SearchField/index.tsx";
 dayjs.locale("ko");
 
 function getCurrentDate() {
@@ -277,31 +278,6 @@ const Attendances: React.FC = () => {
     );
   };
 
-  const renderSearchbar = () => {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          paddingX: "2rem",
-        }}
-      >
-        <TextField
-          size="small"
-          label="이름"
-          InputProps={{
-            endAdornment: (
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            ),
-          }}
-        />
-      </Box>
-    );
-  };
-
   const renderCommuteTable = () => {
     return (
       <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
@@ -347,7 +323,7 @@ const Attendances: React.FC = () => {
         >
           {renderDateCalendar()}
         </Box>
-        {renderSearchbar()}
+        <SearchField label="이름" />
         {renderCommuteTable()}
       </Stack>
     );
