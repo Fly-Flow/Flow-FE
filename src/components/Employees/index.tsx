@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import { AddCircleOutline } from "@mui/icons-material";
 import Header from "../shared/Header";
 import Chip from "@/components/shared/Chip/index.tsx";
 
@@ -87,7 +88,11 @@ const Employees: React.FC = (props) => {
             ),
           }}
         />
-        <Button variant="contained" onClick={openDialog}>
+        <Button
+          variant="contained"
+          startIcon={<AddCircleOutline />}
+          onClick={openDialog}
+        >
           구성원 추가
         </Button>
       </Box>

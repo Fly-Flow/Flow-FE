@@ -113,7 +113,7 @@ const Vacation: React.FC = () => {
             startIcon={<AddCircleOutline />}
             onClick={openDialog}
           >
-            휴가 관리
+            휴가 신청
           </Button>
         </Box>
         {renderMyVacationTable()}
