@@ -9,7 +9,6 @@ import {
   DialogTitle,
   FormGroup,
   FormLabel,
-  IconButton,
   Paper,
   Stack,
   Table,
@@ -21,13 +20,18 @@ import {
   TextField,
 } from "@mui/material";
 import { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import { AddCircleOutline } from "@mui/icons-material";
 import Header from "../shared/Header";
 import Chip from "@/components/shared/Chip/index.tsx";
+import SearchField from "../shared/SearchField";
 
 const Employees: React.FC = (props) => {
   const [employeesDialog, setEmployeesDialog] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleTabChange = (newTab: number) => {
+    setCurrentTab(newTab);
+  };
 
   const [employees, setEmployees] = useState([
     {
@@ -65,7 +69,13 @@ const Employees: React.FC = (props) => {
   };
 
   const renderHeader = () => {
-    return <Header header="구성원" />;
+    return (
+      <Header
+        header="구성원"
+        currentTab={currentTab}
+        onTabChange={handleTabChange}
+      />
+    );
   };
 
   const renderToolbar = () => {
@@ -78,17 +88,7 @@ const Employees: React.FC = (props) => {
           paddingX: "2rem",
         }}
       >
-        <TextField
-          size="small"
-          label="이름"
-          InputProps={{
-            endAdornment: (
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            ),
-          }}
-        />
+        <SearchField label="이름" />
         <Button
           variant="contained"
           startIcon={<AddCircleOutline />}
