@@ -23,7 +23,7 @@ export default function Home() {
         }}
       >
         <Header
-          header="홈"
+          headers={["홈"]}
           currentTab={currentTab}
           onTabChange={handleTabChange}
         />

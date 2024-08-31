@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import BasicTabs from "../shared/BasicTabs";
 import {
   Box,
   Button,
@@ -22,6 +21,7 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
+import Header from "../shared/Header";
 dayjs.locale("ko");
 
 function getCurrentDate() {
@@ -102,15 +102,6 @@ const Attendances: React.FC = () => {
       workingStatus: "지각",
     },
   ]);
-
-  const tabLabels = [
-    <Typography key={currentTab} variant="h4">
-      나의 출퇴근
-    </Typography>,
-    <Typography key={currentTab} variant="h4">
-      전체 출퇴근
-    </Typography>,
-  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -332,8 +323,8 @@ const Attendances: React.FC = () => {
 
   return (
     <Box>
-      <BasicTabs
-        labels={tabLabels}
+      <Header
+        headers={["나의 출퇴근", "전체 출퇴근"]}
         currentTab={currentTab}
         onTabChange={handleTabChange}
       />

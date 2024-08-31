@@ -1,6 +1,5 @@
 "use client";
 
-import BasicTabs from "@/components/shared/BasicTabs/index.tsx";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
 import theme from "@/styles/theme.ts";
@@ -28,6 +27,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import Header from "../shared/Header";
 
 const Vacation: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -37,15 +37,6 @@ const Vacation: React.FC = () => {
     isVacationApplicationViewDialogOpen,
     setIsVacationApplicationViewDialogOpen,
   ] = useState(false);
-
-  const tabLabels = [
-    <Typography key={currentTab} variant="h4">
-      나의 휴가 관리
-    </Typography>,
-    <Typography key={currentTab} variant="h4">
-      전체 휴가 관리
-    </Typography>,
-  ];
 
   const openVacationApplicationDialog = () => {
     setIsVacationApplicationDialogOpen(true);
@@ -240,8 +231,8 @@ const Vacation: React.FC = () => {
 
   return (
     <Stack gap="1rem">
-      <BasicTabs
-        labels={tabLabels}
+      <Header
+        headers={["나의 휴가 관리", "전체 휴가 관리"]}
         currentTab={currentTab}
         onTabChange={handleTabChange}
       />

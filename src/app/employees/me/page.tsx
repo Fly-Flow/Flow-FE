@@ -8,7 +8,7 @@ const MyPage = () => {
     <Stack gap="14rem" direction="row">
       <SideBar />
       <Box sx={{ padding: "1rem" }}>
-        <Header header="인사 정보" />
+        <Header headers={["인사 정보"]} />
         <EmployeeInfoCardPresentation />
       </Box>
     </Stack>

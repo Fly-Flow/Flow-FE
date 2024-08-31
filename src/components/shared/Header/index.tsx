@@ -4,17 +4,21 @@ import { Typography } from "@mui/material";
 import BasicTabs from "@/components/shared/BasicTabs";
 
 type HeaderProps = {
-  header: string;
+  headers: string[];
   currentTab: number;
   onTabChange: (newTab: number) => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ header, currentTab, onTabChange }) => {
-  const tabLabels = [
-    <Typography key={0} variant="h4">
+const Header: React.FC<HeaderProps> = ({
+  headers,
+  currentTab,
+  onTabChange,
+}) => {
+  const tabLabels = headers.map((header, index) => (
+    <Typography key={index} variant="h4">
       {header}
-    </Typography>,
-  ];
+    </Typography>
+  ));
 
   return (
     <BasicTabs

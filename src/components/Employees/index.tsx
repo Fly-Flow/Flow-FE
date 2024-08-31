@@ -71,7 +71,7 @@ const Employees: React.FC = (props) => {
   const renderHeader = () => {
     return (
       <Header
-        header="구성원"
+        headers={["구성원"]}
         currentTab={currentTab}
         onTabChange={handleTabChange}
       />
