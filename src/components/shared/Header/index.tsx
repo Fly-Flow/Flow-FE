@@ -1,31 +1,26 @@
 "use client";
 
-import { Typography } from "@mui/material";
-import BasicTabs from "@/components/shared/BasicTabs";
+import theme from "@/styles/theme.ts";
+import { buttonBaseClasses, Tab, Tabs, Typography } from "@mui/material";
 
 type HeaderProps = {
-  headers: string[];
-  currentTab: number;
-  onTabChange: (newTab: number) => void;
+  label: string;
 };
 
-const Header: React.FC<HeaderProps> = ({
-  headers,
-  currentTab,
-  onTabChange,
-}) => {
-  const tabLabels = headers.map((header, index) => (
-    <Typography key={index} variant="h4">
-      {header}
-    </Typography>
-  ));
-
+// 단일 Tab을 비활성화 상태로 렌더링하는 Header 컴포넌트
+const Header: React.FC<HeaderProps> = ({ label }) => {
   return (
-    <BasicTabs
-      labels={tabLabels}
-      currentTab={currentTab}
-      onTabChange={onTabChange}
-    />
+    <Tabs value={0}>
+      <Tab
+        label={<Typography variant="h4">{label}</Typography>}
+        disabled
+        sx={{
+          [`&.${buttonBaseClasses.root}`]: {
+            color: theme.palette.primary.main,
+          },
+        }}
+      />
+    </Tabs>
   );
 };
 
