@@ -6,12 +6,6 @@ import { Box } from "@mui/material";
 import { useState } from "react";
 
 export default function Home() {
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const handleTabChange = (newTab: number) => {
-    setCurrentTab(newTab);
-  };
-
   return (
     <>
       <SideBar />
@@ -22,11 +16,7 @@ export default function Home() {
           padding: "1rem",
         }}
       >
-        <Header
-          headers={["홈"]}
-          currentTab={currentTab}
-          onTabChange={handleTabChange}
-        />
+        <Header label="홈" />
       </Box>
     </>
   );

@@ -27,7 +27,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import Header from "../shared/Header";
+import Tabs from "@/components/shared/Tabs/index.tsx";
 
 const Vacation: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -231,8 +231,8 @@ const Vacation: React.FC = () => {
 
   return (
     <Stack gap="1rem">
-      <Header
-        headers={["나의 휴가 관리", "전체 휴가 관리"]}
+      <Tabs
+        labels={["나의 휴가 관리", "전체 휴가 관리"]}
         currentTab={currentTab}
         onTabChange={handleTabChange}
       />
