@@ -68,16 +68,6 @@ const Employees: React.FC = (props) => {
     setEmployeesDialog(false);
   };
 
-  const renderHeader = () => {
-    return (
-      <Header
-        headers={["구성원"]}
-        currentTab={currentTab}
-        onTabChange={handleTabChange}
-      />
-    );
-  };
-
   const renderToolbar = () => {
     return (
       <Box
@@ -135,7 +125,7 @@ const Employees: React.FC = (props) => {
 
   return (
     <Stack gap="1.5rem">
-      {renderHeader()}
+      <Header label="구성원" />
       {renderToolbar()}
 
       <Dialog open={employeesDialog} onClose={closeDialog}>
