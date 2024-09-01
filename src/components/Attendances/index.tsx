@@ -21,7 +21,7 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
-import Header from "../shared/Header";
+import Tabs from "@/components/shared/Tabs/index.tsx";
 dayjs.locale("ko");
 
 function getCurrentDate() {
@@ -323,8 +323,8 @@ const Attendances: React.FC = () => {
 
   return (
     <Box>
-      <Header
-        headers={["나의 출퇴근", "전체 출퇴근"]}
+      <Tabs
+        labels={["나의 출퇴근", "전체 출퇴근"]}
         currentTab={currentTab}
         onTabChange={handleTabChange}
       />
