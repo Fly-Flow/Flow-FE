@@ -7,6 +7,7 @@ interface TabsProps {
   onTabChange: (index: number) => void;
 }
 
+// 여러 개의 Tab을 렌더링하는 Tabs 컴포넌트
 const Tabs: React.FC<TabsProps> = ({ labels, currentTab, onTabChange }) => {
   const handleChange = (e: React.SyntheticEvent, newValue: number) => {
     onTabChange(newValue);
