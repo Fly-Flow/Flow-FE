@@ -1,6 +1,7 @@
 "use client";
 
-import { Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
+import BoxShadowContainer from "@/components/shared/BoxShadowContainer/index.tsx";
+import { Avatar, Stack, Typography } from "@mui/material";
 
 // 프로필 경로
 const profile = [
@@ -46,61 +47,52 @@ const personalInfo = [
 const randomProfile = profile[Math.floor(Math.random() * profile.length)];
 
 const EmployeeInfoCardPresentation: React.FC = () => {
-  const theme = useTheme();
-
   return (
-    <Stack
-      padding="2rem"
-      direction="row"
-      gap="1rem"
-      sx={{
-        backgroundColor: "common.white",
-        borderRadius: "1.875rem",
-        boxShadow: `0rem 0.25rem 0.25rem 0rem ${theme.palette.grey[500]}`,
-      }}
-    >
-      <Avatar src={randomProfile.src} alt={randomProfile.gender} />
-      <Typography variant="h6">사원 정보</Typography>
-      <Stack spacing={1}>
-        {employeeInfo.map((info) => (
-          <Stack
-            key={info.key}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography
-              color="text.secondary"
-              sx={{ flexShrink: 0, flexBasis: "100px" }}
+    <BoxShadowContainer borderRadius="1.625rem">
+      <Stack direction="row" padding="2rem" gap="1rem">
+        <Avatar src={randomProfile.src} alt={randomProfile.gender} />
+        <Typography variant="h6">사원 정보</Typography>
+        <Stack spacing={1}>
+          {employeeInfo.map((info) => (
+            <Stack
+              key={info.key}
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {info.label}
-            </Typography>
+              <Typography
+                color="text.secondary"
+                sx={{ flexShrink: 0, flexBasis: "100px" }}
+              >
+                {info.label}
+              </Typography>
 
-            <Typography sx={{ flexGrow: 1 }}>{employee[info.key]}</Typography>
-          </Stack>
-        ))}
-      </Stack>
+              <Typography sx={{ flexGrow: 1 }}>{employee[info.key]}</Typography>
+            </Stack>
+          ))}
+        </Stack>
 
-      <Typography variant="h6">개인 정보</Typography>
-      <Stack spacing={1}>
-        {personalInfo.map((info) => (
-          <Stack
-            key={info.key}
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography
-              color="text.secondary"
-              sx={{ flexShrink: 0, flexBasis: "100px" }}
+        <Typography variant="h6">개인 정보</Typography>
+        <Stack spacing={1}>
+          {personalInfo.map((info) => (
+            <Stack
+              key={info.key}
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {info.label}
-            </Typography>
-            <Typography sx={{ flexGrow: 1 }}>{employee[info.key]}</Typography>
-          </Stack>
-        ))}
+              <Typography
+                color="text.secondary"
+                sx={{ flexShrink: 0, flexBasis: "100px" }}
+              >
+                {info.label}
+              </Typography>
+              <Typography sx={{ flexGrow: 1 }}>{employee[info.key]}</Typography>
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
-    </Stack>
+    </BoxShadowContainer>
   );
 };
 
