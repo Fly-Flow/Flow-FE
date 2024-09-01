@@ -22,6 +22,7 @@ import "dayjs/locale/ko";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
 import Tabs from "@/components/shared/Tabs/index.tsx";
+import BoxShadowContainer from "@/components/shared/BoxShadowContainer/index.tsx";
 dayjs.locale("ko");
 
 function getCurrentDate() {
@@ -115,18 +116,14 @@ const Attendances: React.FC = () => {
 
   const renderCurrentDateTime = () => {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          width: "25rem",
-          height: "3.5rem",
-          backgroundColor: "white",
-          borderRadius: "0.5rem",
-          boxShadow: 2,
-          cursor: "default",
-        }}
+      <BoxShadowContainer
+        display="flex"
+        justifyContent="space-evenly"
+        alignItems="center"
+        width="25rem"
+        height="3.5rem"
+        borderRadius="0.5rem"
+        sx={{ cursor: "default" }}
       >
         <Typography color="primary.main" variant="subtitle1">
           {currentDate}
@@ -137,7 +134,7 @@ const Attendances: React.FC = () => {
         <Typography color="primary.main" variant="subtitle1">
           {currentTime}
         </Typography>
-      </Box>
+      </BoxShadowContainer>
     );
   };
 
@@ -231,23 +228,21 @@ const Attendances: React.FC = () => {
     );
   };
 
-  const renderCardInfo = () => {
+  const renderMyAttendanceInfo = () => {
     return (
-      <Card sx={{ width: "24rem", borderRadius: "0.5rem", boxShadow: 2 }}>
-        <CardContent>
-          {selectedDate ? selectedDate.format("MM월 DD일 (ddd)") : ""}
-          <Typography>
-            {"출근"}
-            {clockInTime}
-          </Typography>
-          <Typography>
-            {"퇴근"}
-            {clockOutTime}
-          </Typography>
-          <Typography>{"근무 시간"}</Typography>
-          <Typography>{"근무 상태"}</Typography>
-        </CardContent>
-      </Card>
+      <BoxShadowContainer width="24rem" borderRadius="0.625rem" padding="1rem">
+        {selectedDate ? selectedDate.format("MM월 DD일 (ddd)") : ""}
+        <Typography>
+          {"출근"}
+          {clockInTime}
+        </Typography>
+        <Typography>
+          {"퇴근"}
+          {clockOutTime}
+        </Typography>
+        <Typography>{"근무 시간"}</Typography>
+        <Typography>{"근무 상태"}</Typography>
+      </BoxShadowContainer>
     );
   };
 
@@ -260,7 +255,7 @@ const Attendances: React.FC = () => {
         </Stack>
         <Stack direction="row" gap="1rem">
           {renderDateCalendar()}
-          {renderCardInfo()}
+          {renderMyAttendanceInfo()}
         </Stack>
       </Stack>
     );
