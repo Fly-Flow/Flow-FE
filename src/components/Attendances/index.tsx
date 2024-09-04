@@ -1,21 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import BasicDateCalendar from "../shared/BasicDateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
@@ -23,6 +9,7 @@ import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
 import Tabs from "@/components/shared/Tabs/index.tsx";
 import BoxShadowContainer from "@/components/shared/BoxShadowContainer/index.tsx";
+import Table from "@/components/shared/Table/index.tsx";
 dayjs.locale("ko");
 
 function getCurrentDate() {
@@ -102,6 +89,24 @@ const Attendances: React.FC = () => {
       workingHours: "1234",
       workingStatus: "지각",
     },
+  ]);
+
+  const commuteTableHeaders = [
+    "이름",
+    "부서",
+    "출근 시간",
+    "퇴근 시간",
+    "근무 시간",
+    "근무 상태",
+  ];
+
+  const commuteTableRows = commuteList.map((employee) => [
+    employee.name,
+    employee.department,
+    employee.clockInTime,
+    employee.clockOutTime,
+    employee.workingHours,
+    <Chip label={employee.workingStatus} key={employee.name} />,
   ]);
 
   useEffect(() => {
@@ -261,39 +266,6 @@ const Attendances: React.FC = () => {
     );
   };
 
-  const renderCommuteTable = () => {
-    return (
-      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>이름</TableCell>
-              <TableCell>부서</TableCell>
-              <TableCell>출근 시간</TableCell>
-              <TableCell>퇴근 시간</TableCell>
-              <TableCell>근무 시간</TableCell>
-              <TableCell>근무 상태</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {commuteList.map((list) => (
-              <TableRow key={list.name}>
-                <TableCell>{list.name}</TableCell>
-                <TableCell>{list.department}</TableCell>
-                <TableCell>{list.clockInTime}</TableCell>
-                <TableCell>{list.clockOutTime}</TableCell>
-                <TableCell>{list.workingHours}</TableCell>
-                <TableCell>
-                  <Chip label={list.workingStatus} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
   const renderAllAttendances = () => {
     return (
       <Stack gap="1rem">
@@ -307,7 +279,7 @@ const Attendances: React.FC = () => {
           {renderDateCalendar()}
         </Box>
         <SearchField label="이름" />
-        {renderCommuteTable()}
+        <Table headers={commuteTableHeaders} rows={commuteTableRows} />
       </Stack>
     );
   };
