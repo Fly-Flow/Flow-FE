@@ -10,7 +10,7 @@ import {
 interface SelectFieldProps {
   label: string;
   value: string | undefined;
-  onChange: (event: SelectChangeEvent) => void;
+  onChange: (e: SelectChangeEvent) => void;
   items: { label: string; value: string | number }[];
   fullWidth?: boolean;
 }

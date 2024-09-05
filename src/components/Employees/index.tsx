@@ -9,6 +9,7 @@ import {
   DialogTitle,
   FormGroup,
   Paper,
+  SelectChangeEvent,
   Stack,
   Table,
   TableBody,
@@ -30,11 +31,27 @@ import {
   positions,
 } from "@/utils/employeesDTO";
 
+const companyCode = "6731";
+
+const departmentCodes: { [key: string]: string } = {
+  인사팀: "601",
+  개발팀: "602",
+  디자인팀: "603",
+  영업팀: "604",
+  회계팀: "605",
+};
+
 const Employees: React.FC = (props) => {
   const [employees, setEmployees] = useState(employeeData);
   const [employeesDialog, setEmployeesDialog] = useState(false);
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
-  const [selectedPositions, setSelectedPositions] = useState<string>("");
+
+  const [newEmployee, setNewEmployee] = useState({
+    name: "",
+    department: "",
+    position: "",
+    joinDate: "",
+    employeeNumber: "",
+  });
 
   const openDialog = () => {
     setEmployeesDialog(true);
@@ -42,6 +59,35 @@ const Employees: React.FC = (props) => {
 
   const closeDialog = () => {
     setEmployeesDialog(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewEmployee({ ...newEmployee, [name]: value });
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<string>, field: string) => {
+    setNewEmployee({ ...newEmployee, [field]: e.target.value as string });
+  };
+
+  const generateEmployeeNumber = () => {
+    const departmentCode = departmentCodes[newEmployee.department] || "000"; // 부서 코드
+    const employeeCount = employees.length + 1; // 현재 사원 수 기반 증가 값
+    const employeeCountPadded = employeeCount.toString().padStart(3, "0"); // 3자리로 맞춤
+
+    return `${companyCode}${departmentCode}${employeeCountPadded}`;
+  };
+
+  const addNewEmployee = () => {
+    const newEmployeeNumber = generateEmployeeNumber(); // 자동 사원 번호 생성
+    const newEmp = {
+      ...newEmployee,
+      employeeNumber: newEmployeeNumber,
+      role: newEmployee.position === "리드" ? "관리자" : "사원", // 권한 설정
+    };
+
+    setEmployees([...employees, newEmp]); // 새로운 사원 추가
+    closeDialog();
   };
 
   const renderToolbar = () => {
@@ -106,29 +152,37 @@ const Employees: React.FC = (props) => {
 
       <Dialog open={employeesDialog} onClose={closeDialog} fullWidth>
         <DialogTitle textAlign="center">구성원 추가</DialogTitle>
-        <DialogContent sx={{ margin: "2rem" }}>
+        <DialogContent sx={{ margin: "1rem" }}>
           <FormGroup sx={{ paddingTop: "1rem", gap: "1rem" }}>
-            <TextField label="이름" />
+            <TextField
+              label="이름"
+              name="name"
+              value={newEmployee.name}
+              onChange={handleInputChange}
+            />
 
             <SelectField
               fullWidth={true}
               label="부서"
-              value={selectedDepartment}
-              onChange={(e) => setSelectedDepartment(e.target.value)}
+              value={newEmployee.department}
+              onChange={(e) => handleSelectChange(e, "department")}
               items={departments}
             />
 
             <SelectField
               fullWidth={true}
               label="직급"
-              value={selectedPositions}
-              onChange={(e) => setSelectedPositions(e.target.value)}
+              value={newEmployee.position}
+              onChange={(e) => handleSelectChange(e, "position")}
               items={positions}
             />
 
             <TextField
-              type="date"
               label="입사 일자"
+              name="joinDate"
+              type="date"
+              value={newEmployee.joinDate}
+              onChange={handleInputChange}
               InputLabelProps={{
                 shrink: true, // label을 위로 올려서 보여줌
               }}
@@ -137,7 +191,7 @@ const Employees: React.FC = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>취소</Button>
-          <Button onClick={() => {}} variant="contained">
+          <Button onClick={addNewEmployee} variant="contained">
             추가
           </Button>
         </DialogActions>
