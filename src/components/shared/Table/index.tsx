@@ -1,3 +1,4 @@
+import theme from "@/styles/theme.ts";
 import {
   TableContainer,
   Table as MuiTable,
@@ -12,9 +13,10 @@ import React from "react";
 type TableProps = {
   headers: string[];
   rows: (string | number | React.ReactNode)[][];
+  onRowClick?: React.MouseEventHandler<HTMLTableRowElement>;
 };
 
-const Table: React.FC<TableProps> = ({ headers, rows }) => {
+const Table: React.FC<TableProps> = ({ headers, rows, onRowClick }) => {
   return (
     <TableContainer component={Paper}>
       <MuiTable>
@@ -29,7 +31,18 @@ const Table: React.FC<TableProps> = ({ headers, rows }) => {
         </TableHead>
         <TableBody>
           {rows.map((row, rowIndex) => (
-            <TableRow key={rowIndex}>
+            <TableRow
+              key={rowIndex}
+              onClick={onRowClick ? onRowClick : undefined}
+              sx={{
+                cursor: onRowClick ? "pointer" : "default",
+                "&:hover": {
+                  backgroundColor: onRowClick
+                    ? theme.palette.info.light
+                    : undefined,
+                },
+              }}
+            >
               {row.map((cell, cellIndex) => (
                 <TableCell key={cellIndex} align="center">
                   {cell}
