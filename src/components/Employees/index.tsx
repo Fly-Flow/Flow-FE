@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogTitle,
   FormGroup,
-  FormLabel,
   Paper,
   Stack,
   Table,
@@ -24,41 +23,18 @@ import { AddCircleOutline } from "@mui/icons-material";
 import Header from "../shared/Header";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "../shared/SearchField";
+import SelectField from "../shared/SelectField";
+import {
+  employees as employeeData,
+  departments,
+  positions,
+} from "@/utils/employeesDTO";
 
 const Employees: React.FC = (props) => {
+  const [employees, setEmployees] = useState(employeeData);
   const [employeesDialog, setEmployeesDialog] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const handleTabChange = (newTab: number) => {
-    setCurrentTab(newTab);
-  };
-
-  const [employees, setEmployees] = useState([
-    {
-      id: "1234123001",
-      name: "김철수",
-      department: "개발팀",
-      position: "주임",
-      hireDate: "2020-01-15",
-      role: "관리자",
-    },
-    {
-      id: "1234123002",
-      name: "이영희",
-      department: "인사팀",
-      position: "사원",
-      hireDate: "2021-07-10",
-      role: "사원",
-    },
-    {
-      id: "1234123003",
-      name: "박민수",
-      department: "디자인팀",
-      position: "대리",
-      hireDate: "2019-11-05",
-      role: "관리자",
-    },
-  ]);
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
+  const [selectedPositions, setSelectedPositions] = useState<string>("");
 
   const openDialog = () => {
     setEmployeesDialog(true);
@@ -106,12 +82,12 @@ const Employees: React.FC = (props) => {
           </TableHead>
           <TableBody>
             {employees.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.id}</TableCell>
+              <TableRow key={employee.employeeNumber}>
+                <TableCell>{employee.employeeNumber}</TableCell>
                 <TableCell>{employee.name}</TableCell>
                 <TableCell>{employee.department}</TableCell>
                 <TableCell>{employee.position}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
+                <TableCell>{employee.joinDate}</TableCell>
                 <TableCell>
                   <Chip label={employee.role} />
                 </TableCell>
@@ -128,18 +104,35 @@ const Employees: React.FC = (props) => {
       <Header label="구성원" />
       {renderToolbar()}
 
-      <Dialog open={employeesDialog} onClose={closeDialog}>
+      <Dialog open={employeesDialog} onClose={closeDialog} fullWidth>
         <DialogTitle textAlign="center">구성원 추가</DialogTitle>
-        <DialogContent>
-          <FormGroup>
-            <FormLabel>이름</FormLabel>
-            <TextField size="small" />
-            <FormLabel>부서</FormLabel>
-            <TextField size="small" />
-            <FormLabel>직급</FormLabel>
-            <TextField size="small" />
-            <FormLabel>입사 일자</FormLabel>
-            <TextField type="date" size="small" />
+        <DialogContent sx={{ margin: "2rem" }}>
+          <FormGroup sx={{ paddingTop: "1rem", gap: "1rem" }}>
+            <TextField label="이름" />
+
+            <SelectField
+              fullWidth={true}
+              label="부서"
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              items={departments}
+            />
+
+            <SelectField
+              fullWidth={true}
+              label="직급"
+              value={selectedPositions}
+              onChange={(e) => setSelectedPositions(e.target.value)}
+              items={positions}
+            />
+
+            <TextField
+              type="date"
+              label="입사 일자"
+              InputLabelProps={{
+                shrink: true, // label을 위로 올려서 보여줌
+              }}
+            />
           </FormGroup>
         </DialogContent>
         <DialogActions>
