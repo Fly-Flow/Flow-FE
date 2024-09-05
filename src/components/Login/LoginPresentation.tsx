@@ -1,5 +1,6 @@
 "use client";
 
+import theme from "@/styles/theme.ts";
 import {
   Button,
   FormGroup,
@@ -7,7 +8,6 @@ import {
   Typography,
   Avatar,
   TextField,
-  useTheme,
 } from "@mui/material";
 
 type LoginProps = {
@@ -16,10 +16,11 @@ type LoginProps = {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const LoginPresentation: React.FC<LoginProps> = (props) => {
-  const { onEmployeeNumberChange, onPasswordChange, onClick } = props;
-  const theme = useTheme();
-
+const LoginPresentation: React.FC<LoginProps> = ({
+  onEmployeeNumberChange,
+  onPasswordChange,
+  onClick,
+}) => {
   return (
     <Stack
       padding="3rem"

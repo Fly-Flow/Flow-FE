@@ -9,14 +9,7 @@ import {
   DialogTitle,
   FormGroup,
   FormLabel,
-  Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
 } from "@mui/material";
 import { useState } from "react";
@@ -24,14 +17,11 @@ import { AddCircleOutline } from "@mui/icons-material";
 import Header from "../shared/Header";
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "../shared/SearchField";
+import Table from "@/components/shared/Table/index.tsx";
 
-const Employees: React.FC = (props) => {
-  const [employeesDialog, setEmployeesDialog] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const handleTabChange = (newTab: number) => {
-    setCurrentTab(newTab);
-  };
+const Employees: React.FC = () => {
+  const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
+    useState(false);
 
   const [employees, setEmployees] = useState([
     {
@@ -60,12 +50,30 @@ const Employees: React.FC = (props) => {
     },
   ]);
 
+  const employeesTableHeaders = [
+    "사원번호",
+    "이름",
+    "부서",
+    "직급",
+    "입사 일자",
+    "권한",
+  ];
+
+  const employeesTableRows = employees.map((employee) => [
+    employee.id,
+    employee.name,
+    employee.department,
+    employee.position,
+    employee.hireDate,
+    <Chip label={employee.role} key={employee.id} />,
+  ]);
+
   const openDialog = () => {
-    setEmployeesDialog(true);
+    setIsAddEmployeesDialogOpen(true);
   };
 
   const closeDialog = () => {
-    setEmployeesDialog(false);
+    setIsAddEmployeesDialogOpen(false);
   };
 
   const renderToolbar = () => {
@@ -90,45 +98,9 @@ const Employees: React.FC = (props) => {
     );
   };
 
-  const renderTable = () => {
+  const renderAddEmployeesDialog = () => {
     return (
-      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>사원번호</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>부서</TableCell>
-              <TableCell>직급</TableCell>
-              <TableCell>입사 일자</TableCell>
-              <TableCell>권한</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {employees.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.id}</TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.position}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
-                <TableCell>
-                  <Chip label={employee.role} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
-  return (
-    <Stack gap="1.5rem">
-      <Header label="구성원" />
-      {renderToolbar()}
-
-      <Dialog open={employeesDialog} onClose={closeDialog}>
+      <Dialog open={isAddEmployeesDialogOpen} onClose={closeDialog}>
         <DialogTitle textAlign="center">구성원 추가</DialogTitle>
         <DialogContent>
           <FormGroup>
@@ -149,8 +121,15 @@ const Employees: React.FC = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
+    );
+  };
 
-      {renderTable()}
+  return (
+    <Stack gap="1.5rem">
+      <Header label="구성원" />
+      {renderToolbar()}
+      {renderAddEmployeesDialog()}
+      <Table headers={employeesTableHeaders} rows={employeesTableRows} />
     </Stack>
   );
 };
