@@ -18,6 +18,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { AddCircleOutline } from "@mui/icons-material";
@@ -43,6 +44,7 @@ const departmentCodes: { [key: string]: string } = {
 
 const Employees: React.FC = (props) => {
   const [employees, setEmployees] = useState(employeeData);
+  const [searchTerm, setSearchTerm] = useState("");
   const [employeesDialog, setEmployeesDialog] = useState(false);
 
   const [newEmployee, setNewEmployee] = useState({
@@ -52,6 +54,14 @@ const Employees: React.FC = (props) => {
     joinDate: "",
     employeeNumber: "",
   });
+
+  const filteredEmployees = employees.filter((employee) =>
+    employee.name.includes(searchTerm)
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   const openDialog = () => {
     setEmployeesDialog(true);
@@ -100,7 +110,11 @@ const Employees: React.FC = (props) => {
           paddingX: "2rem",
         }}
       >
-        <SearchField label="이름" />
+        <SearchField
+          label="이름"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
         <Button
           variant="contained"
           startIcon={<AddCircleOutline />}
@@ -127,18 +141,28 @@ const Employees: React.FC = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {employees.map((employee) => (
-              <TableRow key={employee.employeeNumber}>
-                <TableCell>{employee.employeeNumber}</TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.position}</TableCell>
-                <TableCell>{employee.joinDate}</TableCell>
-                <TableCell>
-                  <Chip label={employee.role} />
+            {filteredEmployees.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  <Typography variant="body2" color="textSecondary">
+                    검색 결과가 없습니다.
+                  </Typography>
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              filteredEmployees.map((employee) => (
+                <TableRow key={employee.employeeNumber}>
+                  <TableCell>{employee.employeeNumber}</TableCell>
+                  <TableCell>{employee.name}</TableCell>
+                  <TableCell>{employee.department}</TableCell>
+                  <TableCell>{employee.position}</TableCell>
+                  <TableCell>{employee.joinDate}</TableCell>
+                  <TableCell>
+                    <Chip label={employee.role} />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>

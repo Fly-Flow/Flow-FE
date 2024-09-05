@@ -4,9 +4,15 @@ import theme from "@/styles/theme.ts";
 
 type SearchFieldProps = {
   label: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const SearchField: React.FC<SearchFieldProps> = ({ label }) => {
+const SearchField: React.FC<SearchFieldProps> = ({
+  label,
+  value,
+  onChange,
+}) => {
   return (
     <Box
       sx={{
@@ -19,6 +25,8 @@ const SearchField: React.FC<SearchFieldProps> = ({ label }) => {
         focused
         size="small"
         label={label}
+        value={value}
+        onChange={onChange}
         sx={{ backgroundColor: "common.white" }}
         slotProps={{
           input: {
