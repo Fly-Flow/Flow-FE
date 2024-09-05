@@ -69,6 +69,13 @@ const Employees: React.FC = (props) => {
 
   const closeDialog = () => {
     setEmployeesDialog(false);
+    setNewEmployee({
+      name: "",
+      department: "",
+      position: "",
+      joinDate: "",
+      employeeNumber: "",
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +96,21 @@ const Employees: React.FC = (props) => {
   };
 
   const addNewEmployee = () => {
+    const nameRegex = /^[^\s]{2,}$/;
+    if (!nameRegex.test(newEmployee.name)) {
+      alert("이름은 공백 없이 2글자 이상이어야 합니다.");
+      return;
+    }
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (
+      !dateRegex.test(newEmployee.joinDate) ||
+      isNaN(new Date(newEmployee.joinDate).getTime())
+    ) {
+      alert("입사 일자가 유효하지 않습니다.");
+      return;
+    }
+
     const newEmployeeNumber = generateEmployeeNumber(); // 자동 사원 번호 생성
     const newEmp = {
       ...newEmployee,
@@ -215,7 +237,16 @@ const Employees: React.FC = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog}>취소</Button>
-          <Button onClick={addNewEmployee} variant="contained">
+          <Button
+            onClick={addNewEmployee}
+            variant="contained"
+            disabled={
+              !newEmployee.name ||
+              !newEmployee.department ||
+              !newEmployee.position ||
+              !newEmployee.joinDate
+            }
+          >
             추가
           </Button>
         </DialogActions>
