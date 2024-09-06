@@ -39,7 +39,7 @@ const Login = () => {
       if (response.data !== "no") {
         localStorage.setItem("response", response.data);
         localStorage.setItem("employeeNumber", loginInfo.employeeNumber);
-        successAlert("로그인 성공", "환엽합니다!", "확인").then(() => {
+        successAlert("로그인 성공", "환영합니다!", "확인").then(() => {
           window.location.href = "/";
         });
       } else {
