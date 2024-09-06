@@ -3,7 +3,7 @@ import Swal, { SweetAlertResult } from "sweetalert2";
 
 export const successAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string
 ): Promise<SweetAlertResult<any>> => {
   return Swal.fire({
@@ -16,7 +16,7 @@ export const successAlert = (
 
 export const errorAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string
 ): Promise<SweetAlertResult<any>> => {
   return Swal.fire({
@@ -29,7 +29,7 @@ export const errorAlert = (
 
 export const warningAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string
 ): Promise<SweetAlertResult<any>> => {
   return Swal.fire({
@@ -42,7 +42,7 @@ export const warningAlert = (
 
 export const infoAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string
 ): Promise<SweetAlertResult<any>> => {
   return Swal.fire({
@@ -55,7 +55,7 @@ export const infoAlert = (
 
 export const questionAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string
 ): Promise<SweetAlertResult<any>> => {
   return Swal.fire({
@@ -68,7 +68,7 @@ export const questionAlert = (
 
 export const confirmAlert = (
   title: string,
-  text: string,
+  text: any,
   confirmButtonText: string,
   cancelButtonText: string
 ): Promise<SweetAlertResult<any>> => {
