@@ -50,7 +50,6 @@ const LoginPresentation: React.FC<LoginProps> = ({
         <TextField
           required
           focused
-          size="small"
           fullWidth
           label="사원 번호"
           onChange={onEmployeeNumberChange}
@@ -61,7 +60,6 @@ const LoginPresentation: React.FC<LoginProps> = ({
         <TextField
           required
           focused
-          size="small"
           fullWidth
           label="비밀 번호"
           type="password"
