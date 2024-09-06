@@ -1,7 +1,8 @@
-import { CardMedia } from "@mui/material";
+import { CardMedia, SxProps, Theme } from "@mui/material";
 
 type LogoProps = {
   color: string;
+  sx?: SxProps<Theme>;
 };
 
 const logo = [
@@ -15,11 +16,17 @@ const logo = [
   },
 ];
 
-const Logo: React.FC<LogoProps> = ({ color }) => {
+const Logo: React.FC<LogoProps> = ({ color, sx, ...rest }) => {
   const selectedLogo = logo.find((item) => item.color === color);
 
   return (
-    <CardMedia component="img" src={selectedLogo?.src} alt={`logo_${color}`} />
+    <CardMedia
+      component="img"
+      src={selectedLogo?.src}
+      alt={`logo_${color}`}
+      sx={{ ...sx }} // 사용자가 전달한 sx 스타일을 병합
+      {...rest}
+    />
   );
 };
 
