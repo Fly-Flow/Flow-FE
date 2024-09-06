@@ -3,7 +3,6 @@
 import Header from "@/components/shared/Header";
 import SideBar from "@/components/shared/SideBar";
 import { Box } from "@mui/material";
-import { useState } from "react";
 
 export default function Home() {
   return (
