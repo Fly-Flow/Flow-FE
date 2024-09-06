@@ -2,12 +2,10 @@
 
 import Login from "@/components/Login/LoginContainer.tsx";
 import Logo from "@/components/Logo/index.tsx";
-import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
+import theme from "@/styles/theme.ts";
+import { Box, Stack } from "@mui/material";
 
 const LoginPage = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
   return (
     <Stack direction="row" height="100vh">
       <Box
