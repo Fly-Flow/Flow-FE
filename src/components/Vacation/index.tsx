@@ -2,7 +2,6 @@
 
 import Chip from "@/components/shared/Chip/index.tsx";
 import SearchField from "@/components/shared/SearchField/index.tsx";
-import theme from "@/styles/theme.ts";
 import { AddCircleOutline } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -15,24 +14,19 @@ import {
   FormGroup,
   FormLabel,
   IconButton,
-  Paper,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useState } from "react";
 import Tabs from "@/components/shared/Tabs/index.tsx";
+import Table from "@/components/shared/Table/index.tsx";
 
 const Vacation: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
+  // 휴가 신청 Dialog Open 상태 관리
   const [isVacationApplicationDialogOpen, setIsVacationApplicationDialogOpen] =
     useState(false);
+  // 휴가 신청 조회 Dialog Open 상태 관리
   const [
     isVacationApplicationViewDialogOpen,
     setIsVacationApplicationViewDialogOpen,
@@ -57,6 +51,33 @@ const Vacation: React.FC = () => {
   const handleTabChange = (newTab: number) => {
     setCurrentTab(newTab);
   };
+
+  // 내 휴가 관리
+  const [myVacations, setMyVacations] = useState([
+    {
+      name: "김철수",
+      title: "휴가 신청합니다.",
+      date: "2024-10-01 ~ 2024-10-04",
+      approver: "담당자",
+      approval: <Chip label="대기중" />,
+    },
+  ]);
+
+  const myVacationTableHeaders = [
+    "이름",
+    "제목",
+    "연차 기간",
+    "결재 담당자",
+    "승인 여부",
+  ];
+
+  const myVacationTableRows = myVacations.map((vacation) => [
+    vacation.name,
+    vacation.title,
+    vacation.date,
+    vacation.approver,
+    vacation.approval,
+  ]);
 
   const renderMyVacationApplicationDialog = () => {
     return (
@@ -89,33 +110,6 @@ const Vacation: React.FC = () => {
     );
   };
 
-  const renderMyVacationTable = () => {
-    return (
-      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>이름</TableCell>
-              <TableCell>제목</TableCell>
-              <TableCell>연차 기간</TableCell>
-              <TableCell>결재 담당자</TableCell>
-              <TableCell>승인 여부</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
   const renderMyVacation = () => {
     return (
       <Stack gap="1rem">
@@ -128,11 +122,38 @@ const Vacation: React.FC = () => {
             휴가 신청
           </Button>
         </Box>
-        {renderMyVacationTable()}
+        <Table headers={myVacationTableHeaders} rows={myVacationTableRows} />
         {renderMyVacationApplicationDialog()}
       </Stack>
     );
   };
+
+  // 전체 휴가 관리
+  const [allVacations, setAllVacations] = useState([
+    {
+      name: "김철수",
+      title: "휴가 신청합니다.",
+      date: "2024-10-01 ~ 2024-10-04",
+      approver: "담당자",
+      approval: <Chip label="대기중" />,
+    },
+  ]);
+
+  const allVacationTableHeaders = [
+    "이름",
+    "제목",
+    "연차 기간",
+    "결재 담당자",
+    "승인 여부",
+  ];
+
+  const allVacationTableRows = allVacations.map((vacation) => [
+    vacation.name,
+    vacation.title,
+    vacation.date,
+    vacation.approver,
+    vacation.approval,
+  ]);
 
   const renderVacationApplicationViewDialog = () => {
     return (
@@ -180,50 +201,17 @@ const Vacation: React.FC = () => {
     );
   };
 
-  const renderAllVacationTable = () => {
-    return (
-      <TableContainer component={Paper} sx={{ paddingX: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>이름</TableCell>
-              <TableCell>제목</TableCell>
-              <TableCell>연차 기간</TableCell>
-              <TableCell>결재 담당자</TableCell>
-              <TableCell>승인 여부</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow
-              onClick={openVacationApplicationViewDialog}
-              sx={{
-                cursor: "pointer",
-                "&:hover": {
-                  backgroundColor: theme.palette.info.light,
-                },
-              }}
-            >
-              <TableCell>홍길동</TableCell>
-              <TableCell>휴가 신청</TableCell>
-              <TableCell>2023-09-01 ~ 2023-09-10</TableCell>
-              <TableCell>김매니저</TableCell>
-              <TableCell>
-                <Chip label="대기중" />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    );
-  };
-
   const renderAllVacation = () => {
     return (
       <Stack gap="1rem">
         <Box display="flex" justifyContent="start">
           <SearchField label="이름" />
         </Box>
-        {renderAllVacationTable()}
+        <Table
+          headers={allVacationTableHeaders}
+          rows={allVacationTableRows}
+          onRowClick={openVacationApplicationViewDialog}
+        />
         {renderVacationApplicationViewDialog()}
       </Stack>
     );
