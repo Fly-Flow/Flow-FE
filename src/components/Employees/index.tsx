@@ -12,7 +12,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddCircleOutline } from "@mui/icons-material";
 import Header from "../shared/Header";
 import Chip from "@/components/shared/Chip/index.tsx";
@@ -38,6 +38,7 @@ const departmentCodes: { [key: string]: string } = {
 const Employees: React.FC = () => {
   const [employees, setEmployees] = useState(employeeData);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
     useState(false);
 
@@ -49,8 +50,19 @@ const Employees: React.FC = () => {
     employeeNumber: "",
   });
 
+  // debounce
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 1800);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
   const filteredEmployees = employees.filter((employee) =>
-    employee.name.includes(searchTerm)
+    employee.name.includes(debouncedSearchTerm)
   );
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
