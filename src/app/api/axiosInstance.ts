@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // env 환경변수 설정
-const BASE_URL = "http://localhost:3000/";
+const BASE_URL = "/";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
