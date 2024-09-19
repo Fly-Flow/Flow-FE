@@ -19,11 +19,10 @@ import Chip from "@/components/shared/Chip/index.tsx";
 import Table from "@/components/shared/Table/index.tsx";
 import SearchField from "../shared/SearchField";
 import SelectField from "../shared/SelectField";
-import {
-  employees as employeeData,
-  departments,
-  positions,
-} from "@/utils/employeesDTO";
+import axiosInstance from "@/app/api/axiosInstance";
+
+import { Employee } from "@/types/Employee";
+import { fetchAllEmployees } from "@/app/api/employees";
 
 const companyCode = "6731";
 
@@ -36,7 +35,14 @@ const departmentCodes: { [key: string]: string } = {
 };
 
 const Employees: React.FC = () => {
-  const [employees, setEmployees] = useState(employeeData);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalElements: 0,
+    hasNext: false,
+    hasPrevious: false,
+  });
+  const size = 1;
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
   const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
@@ -69,6 +75,37 @@ const Employees: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  const loadEmployees = async (page: number) => {
+    try {
+      const response = await fetchAllEmployees(size, page);
+      const {
+        employeeDetails,
+        currentPageNumber,
+        totalElements,
+        hasNext,
+        hasPrevious,
+      } = response.data;
+
+      setEmployees(employeeDetails);
+      setPagination({
+        currentPage: currentPageNumber,
+        totalElements,
+        hasNext,
+        hasPrevious,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadEmployees(1);
+  }, []);
+
+  const handlePageChange = (newPage: number) => {
+    loadEmployees(newPage);
+  };
+
   const employeesTableHeaders = [
     "사원번호",
     "이름",
@@ -94,11 +131,11 @@ const Employees: React.FC = () => {
   const closeDialog = () => {
     setIsAddEmployeesDialogOpen(false);
     setNewEmployee({
+      employeeNumber: "",
       name: "",
       department: "",
       position: "",
       joinDate: "",
-      employeeNumber: "",
     });
   };
 
@@ -119,7 +156,7 @@ const Employees: React.FC = () => {
     return `${companyCode}${departmentCode}${employeeCountPadded}`;
   };
 
-  const addNewEmployee = () => {
+  const addNewEmployee = async () => {
     const nameRegex = /^[^\s]{2,}$/;
     if (!nameRegex.test(newEmployee.name)) {
       alert("이름은 공백 없이 2글자 이상이어야 합니다.");
@@ -137,12 +174,33 @@ const Employees: React.FC = () => {
 
     const newEmployeeNumber = generateEmployeeNumber(); // 자동 사원 번호 생성
     const newEmp = {
-      ...newEmployee,
       employeeNumber: newEmployeeNumber,
-      role: newEmployee.position === "리드" ? "관리자" : "사원", // 권한 설정
+      name: newEmployee.name,
+      department: newEmployee.department,
+      position: newEmployee.position,
+      joinDate: newEmployee.joinDate,
+      role: newEmployee.position === "리드" ? "관리자" : "사원",
     };
 
-    setEmployees([...employees, newEmp]); // 새로운 사원 추가
+    // try {
+    //   const response = await axiosInstance.post("api/admin/employees", newEmp);
+    //   console.log("API response:", response);
+
+    //   if (response) {
+    //     // setEmployees((prevEmployees) => [...prevEmployees, newEmp]);
+    //     setEmployees((prevEmployees) => {
+    //       const updatedEmployees = [...prevEmployees, newEmp];
+    //       console.log("Updated employees list:", updatedEmployees);
+    //       return updatedEmployees;
+    //     });
+    //     alert("구성원이 추가되었습니다.");
+    //   } else {
+    //     alert("구성원 추가에 실패했습니다.");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+
     closeDialog();
     setIsAddEmployeesDialogOpen(false);
   };
@@ -191,7 +249,10 @@ const Employees: React.FC = () => {
               label="부서"
               value={newEmployee.department}
               onChange={(e) => handleSelectChange(e, "department")}
-              items={departments}
+              items={Object.keys(departmentCodes).map((department) => ({
+                value: department,
+                label: department,
+              }))}
             />
 
             <SelectField
@@ -199,7 +260,11 @@ const Employees: React.FC = () => {
               label="직급"
               value={newEmployee.position}
               onChange={(e) => handleSelectChange(e, "position")}
-              items={positions}
+              items={[
+                { value: "사원", label: "사원" },
+                { value: "팀장", label: "팀장" },
+                { value: "리드", label: "리드" },
+              ]}
             />
 
             <TextField
