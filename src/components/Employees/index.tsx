@@ -172,10 +172,11 @@ const Employees: React.FC = () => {
 
   const generateEmployeeNumber = () => {
     const departmentCode = departmentCodes[newEmployee.department] || "000"; // 부서 코드
-    const employeeCount = employees.length + 1; // 현재 사원 수 기반 증가 값
-    const employeeCountPadded = employeeCount.toString().padStart(3, "0"); // 3자리로 맞춤
+    const employeeCount = (pagination.totalElements + 1)
+      .toString()
+      .padStart(3, "0"); // 현재 사원 수 기반 증가 + 1
 
-    return `${companyCode}${departmentCode}${employeeCountPadded}`;
+    return `${companyCode}${departmentCode}${employeeCount}`;
   };
 
   const addNewEmployee = async () => {
