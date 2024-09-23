@@ -1,0 +1,47 @@
+import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import theme from "@/styles/theme.ts";
+
+type SearchFieldProps = {
+  label: string;
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const SearchField: React.FC<SearchFieldProps> = ({
+  label,
+  value,
+  onChange,
+}) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <TextField
+        focused
+        size="small"
+        label={label}
+        value={value}
+        onChange={onChange}
+        sx={{ backgroundColor: "common.white" }}
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton>
+                  <SearchIcon sx={{ color: theme.palette.primary.main }} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
+    </Box>
+  );
+};
+
+export default SearchField;

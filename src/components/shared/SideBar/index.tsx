@@ -1,5 +1,6 @@
 "use client";
 
+import Logo from "@/components/Logo/index.tsx";
 import {
   Box,
   Button,
@@ -24,6 +25,14 @@ const SideBar: React.FC = (props) => {
         height: "100%",
       }}
     >
+      <Box
+        display="flex"
+        justifyContent="center"
+        padding="1rem"
+        marginBottom="1rem"
+      >
+        <Logo color="white" />
+      </Box>
       <List sx={{ flexGrow: 1 }}>
         <ListItem disablePadding>
           <ListItemButton
@@ -42,11 +51,13 @@ const SideBar: React.FC = (props) => {
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
-            href=""
+            href="/attendances"
             sx={{
               color: "primary.dark",
               backgroundColor:
-                pathname === "" ? "background.default" : "secondary.main",
+                pathname === "/attendances"
+                  ? "background.default"
+                  : "secondary.main",
               "&:hover": {
                 backgroundColor: "background.default",
               },
@@ -57,11 +68,11 @@ const SideBar: React.FC = (props) => {
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
-            href=""
+            href="/leave"
             sx={{
               color: "primary.dark",
               backgroundColor:
-                pathname === "" ? "background.default" : "secondary.main",
+                pathname === "/leave" ? "background.default" : "secondary.main",
               "&:hover": {
                 backgroundColor: "background.default",
               },
@@ -89,11 +100,13 @@ const SideBar: React.FC = (props) => {
         </ListItem>
         <ListItem disablePadding>
           <ListItemButton
-            href=""
+            href="/employees/me"
             sx={{
               color: "primary.dark",
               backgroundColor:
-                pathname === "" ? "background.default" : "secondary.main",
+                pathname === "/employees/me"
+                  ? "background.default"
+                  : "secondary.main",
               "&:hover": {
                 backgroundColor: "background.default",
               },
@@ -111,7 +124,7 @@ const SideBar: React.FC = (props) => {
           color: "primary.dark",
           backgroundColor: "secondary.main",
           "&:hover": {
-            backgroundColor: "background.default",
+            color: "white",
           },
         }}
         onClick={() => router.push("/login")}

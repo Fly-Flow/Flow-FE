@@ -8,65 +8,230 @@ import {
   DialogContent,
   DialogTitle,
   FormGroup,
-  FormLabel,
-  IconButton,
+  Pagination,
+  SelectChangeEvent,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
-  Typography,
 } from "@mui/material";
-import { useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
+import { AddCircleOutline } from "@mui/icons-material";
+import Header from "../shared/Header";
+import Chip from "@/components/shared/Chip/index.tsx";
+import Table from "@/components/shared/Table/index.tsx";
+import SearchField from "../shared/SearchField";
+import SelectField from "../shared/SelectField";
 
-const Employees: React.FC = (props) => {
-  const [employeesDialog, setEmployeesDialog] = useState(false);
+import {
+  addEmployee,
+  EmployeeOverview,
+  fetchAllEmployees,
+  fetchEmployeesByName,
+} from "@/app/api/employees";
+import { useDebounce } from "@/hooks/useDebounce";
 
-  const [employees, setEmployees] = useState([
-    {
-      id: "1234123001",
-      name: "김철수",
-      department: "개발팀",
-      position: "주임",
-      hireDate: "2020-01-15",
-      role: "관리자",
-    },
-    {
-      id: "1234123002",
-      name: "이영희",
-      department: "인사팀",
-      position: "사원",
-      hireDate: "2021-07-10",
-      role: "사원",
-    },
-    {
-      id: "1234123003",
-      name: "박민수",
-      department: "디자인팀",
-      position: "대리",
-      hireDate: "2019-11-05",
-      role: "관리자",
-    },
+const companyCode = "6731";
+
+const departmentCodes: { [key: string]: string } = {
+  인사팀: "601",
+  개발팀: "602",
+  디자인팀: "603",
+  영업팀: "604",
+  회계팀: "605",
+};
+
+const Employees: React.FC = () => {
+  const [employees, setEmployees] = useState<EmployeeOverview[]>([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+    totalPages: 0,
+    totalElements: 0,
+    hasNext: false,
+    hasPrevious: false,
+  });
+  const size = 10;
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
+    useState(false);
+
+  const [newEmployee, setNewEmployee] = useState({
+    name: "",
+    department: "",
+    position: "",
+    joinDate: "",
+    employeeNumber: "",
+  });
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+      searchEmployees(debouncedSearchTerm);
+    } else {
+      loadAllEmployees(0);
+    }
+  }, [debouncedSearchTerm]);
+
+  const searchEmployees = async (name: string) => {
+    try {
+      const response = await fetchEmployeesByName(name);
+
+      const employeesData = response.data.employeeOverviewResponse;
+      // console.log(employeesData);
+
+      const filteredEmployees = employeesData.filter(
+        (employee: EmployeeOverview) => employee.name.includes(name)
+      );
+
+      setEmployees(filteredEmployees);
+      // console.log(filteredEmployees);
+    } catch (error) {
+      console.error(error);
+      setEmployees([]);
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: newPage - 1,
+    }));
+  };
+
+  useEffect(() => {
+    loadAllEmployees(pagination.currentPage);
+  }, [pagination.currentPage]);
+
+  const loadAllEmployees = async (page: number) => {
+    try {
+      const response = await fetchAllEmployees(size, page);
+
+      const {
+        employeeOverviewResponse,
+        currentPageNumber,
+        totalElements,
+        hasNext,
+        hasPrevious,
+      } = response.data;
+
+      const totalPages = Math.ceil(totalElements / size);
+
+      setEmployees(employeeOverviewResponse);
+      setPagination({
+        currentPage: currentPageNumber,
+        totalElements,
+        totalPages,
+        hasNext,
+        hasPrevious,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const employeesTableHeaders = [
+    "사원번호",
+    "이름",
+    "부서",
+    "직급",
+    "입사 일자",
+    "권한",
+  ];
+
+  const roleMapping: { [key: string]: string } = {
+    EMPLOYEE: "사원",
+    ADMIN: "관리자",
+  };
+
+  const employeesTableRows = employees.map((employee) => [
+    employee.employeeNumber,
+    employee.name,
+    employee.department,
+    employee.position,
+    employee.joinDate,
+    <Chip
+      label={roleMapping[employee.role] || employee.role}
+      key={employee.employeeNumber}
+    />,
   ]);
 
   const openDialog = () => {
-    setEmployeesDialog(true);
+    setIsAddEmployeesDialogOpen(true);
   };
 
   const closeDialog = () => {
-    setEmployeesDialog(false);
+    setIsAddEmployeesDialogOpen(false);
+    setNewEmployee({
+      employeeNumber: "",
+      name: "",
+      department: "",
+      position: "",
+      joinDate: "",
+    });
   };
 
-  const renderHeader = () => {
-    return (
-      <Typography variant="h4" sx={{ cursor: "default" }}>
-        구성원
-      </Typography>
-    );
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewEmployee({ ...newEmployee, [name]: value });
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent<string>, field: string) => {
+    setNewEmployee({ ...newEmployee, [field]: e.target.value as string });
+  };
+
+  const generateEmployeeNumber = () => {
+    const departmentCode = departmentCodes[newEmployee.department] || "000"; // 부서 코드
+    const employeeCount = (pagination.totalElements + 1)
+      .toString()
+      .padStart(3, "0"); // 현재 사원 수 기반 증가 + 1
+
+    return `${companyCode}${departmentCode}${employeeCount}`;
+  };
+
+  const addNewEmployee = async () => {
+    const nameRegex = /^[^\s]{2,}$/;
+    if (!nameRegex.test(newEmployee.name)) {
+      alert("이름은 공백 없이 2글자 이상이어야 합니다.");
+      return;
+    }
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (
+      !dateRegex.test(newEmployee.joinDate) ||
+      isNaN(new Date(newEmployee.joinDate).getTime())
+    ) {
+      alert("입사 일자가 유효하지 않습니다.");
+      return;
+    }
+
+    const newEmployeeNumber = generateEmployeeNumber(); // 자동 사원 번호 생성
+    const newEmp = {
+      employeeNumber: newEmployeeNumber,
+      name: newEmployee.name,
+      department: newEmployee.department,
+      position: newEmployee.position,
+      joinDate: newEmployee.joinDate,
+      role: newEmployee.position === "리드" ? "관리자" : "사원",
+    };
+
+    try {
+      const response = await addEmployee(newEmp);
+
+      if (response) {
+        setEmployees((prevEmployees) => [...prevEmployees, newEmp]);
+        alert("구성원이 추가되었습니다.");
+      } else {
+        alert("구성원 추가에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    closeDialog();
+    setIsAddEmployeesDialogOpen(false);
   };
 
   const renderToolbar = () => {
@@ -79,83 +244,102 @@ const Employees: React.FC = (props) => {
           paddingX: "2rem",
         }}
       >
-        <TextField
-          size="small"
+        <SearchField
           label="이름"
-          InputProps={{
-            endAdornment: (
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            ),
-          }}
+          value={searchTerm}
+          onChange={handleSearchChange}
         />
-        <Button variant="contained" onClick={openDialog}>
+        <Button
+          variant="contained"
+          startIcon={<AddCircleOutline />}
+          onClick={openDialog}
+        >
           구성원 추가
         </Button>
       </Box>
     );
   };
 
-  const renderTable = () => {
+  const renderAddEmployeesDialog = () => {
     return (
-      <TableContainer sx={{ paddingX: "2rem" }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>사원번호</TableCell>
-              <TableCell>이름</TableCell>
-              <TableCell>부서</TableCell>
-              <TableCell>직급</TableCell>
-              <TableCell>입사 일자</TableCell>
-              <TableCell>권한</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {employees.map((employee) => (
-              <TableRow key={employee.id}>
-                <TableCell>{employee.id}</TableCell>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.position}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
-                <TableCell>{employee.role}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Dialog open={isAddEmployeesDialogOpen} onClose={closeDialog} fullWidth>
+        <DialogTitle textAlign="center">구성원 추가</DialogTitle>
+        <DialogContent sx={{ margin: "1rem" }}>
+          <FormGroup sx={{ paddingTop: "1rem", gap: "1rem" }}>
+            <TextField
+              label="이름"
+              name="name"
+              value={newEmployee.name}
+              onChange={handleInputChange}
+            />
+
+            <SelectField
+              fullWidth={true}
+              label="부서"
+              value={newEmployee.department}
+              onChange={(e) => handleSelectChange(e, "department")}
+              items={Object.keys(departmentCodes).map((department) => ({
+                value: department,
+                label: department,
+              }))}
+            />
+
+            <SelectField
+              fullWidth={true}
+              label="직급"
+              value={newEmployee.position}
+              onChange={(e) => handleSelectChange(e, "position")}
+              items={[
+                { value: "사원", label: "사원" },
+                { value: "팀장", label: "팀장" },
+                { value: "리드", label: "리드" },
+              ]}
+            />
+
+            <TextField
+              label="입사 일자"
+              name="joinDate"
+              type="date"
+              value={newEmployee.joinDate}
+              onChange={handleInputChange}
+              InputLabelProps={{
+                shrink: true, // label을 위로 올려서 보여줌
+              }}
+            />
+          </FormGroup>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog}>취소</Button>
+          <Button
+            onClick={addNewEmployee}
+            variant="contained"
+            disabled={
+              !newEmployee.name ||
+              !newEmployee.department ||
+              !newEmployee.position ||
+              !newEmployee.joinDate
+            }
+          >
+            추가
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   };
 
   return (
     <Stack gap="1.5rem">
-      {renderHeader()}
+      <Header label="구성원" />
       {renderToolbar()}
-
-      <Dialog open={employeesDialog} onClose={closeDialog}>
-        <DialogTitle textAlign="center">구성원 추가</DialogTitle>
-        <DialogContent>
-          <FormGroup>
-            <FormLabel>이름</FormLabel>
-            <TextField size="small" />
-            <FormLabel>부서</FormLabel>
-            <TextField size="small" />
-            <FormLabel>직급</FormLabel>
-            <TextField size="small" />
-            <FormLabel>입사 일자</FormLabel>
-            <TextField type="date" size="small" />
-          </FormGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>취소</Button>
-          <Button onClick={() => {}} variant="contained">
-            추가
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {renderTable()}
+      {renderAddEmployeesDialog()}
+      <Table headers={employeesTableHeaders} rows={employeesTableRows} />
+      <Pagination
+        count={pagination.totalPages}
+        page={pagination.currentPage + 1}
+        onChange={handlePageChange}
+        color="primary"
+        sx={{ alignSelf: "center" }}
+      />
     </Stack>
   );
 };
