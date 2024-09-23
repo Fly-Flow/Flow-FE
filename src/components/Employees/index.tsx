@@ -25,7 +25,9 @@ import {
   addEmployee,
   EmployeeOverview,
   fetchAllEmployees,
+  fetchEmployeesByName,
 } from "@/app/api/employees";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const companyCode = "6731";
 
@@ -42,14 +44,14 @@ const Employees: React.FC = () => {
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
-    totalElements: 1,
+    totalElements: 0,
     hasNext: false,
     hasPrevious: false,
   });
   const size = 10;
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
     useState(false);
 
@@ -61,22 +63,36 @@ const Employees: React.FC = () => {
     employeeNumber: "",
   });
 
-  // debounce
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 1800);
+    if (debouncedSearchTerm) {
+      searchEmployees(debouncedSearchTerm);
+    } else {
+      loadAllEmployees(1);
+    }
+  }, [debouncedSearchTerm]);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm]);
+  const searchEmployees = async (name: string) => {
+    try {
+      const response = await fetchEmployeesByName(name);
 
-  const filteredEmployees = employees
-    ? employees.filter((employee) =>
-        employee.name.includes(debouncedSearchTerm)
-      )
-    : [];
+      const employeesData = response.data.employeeOverviewResponse || [];
+
+      const filteredEmployees = employeesData.filter(
+        (employee: EmployeeOverview) => employee.name.includes(name)
+      );
+
+      setEmployees(filteredEmployees);
+      console.log(filteredEmployees);
+
+      setPagination((prev) => ({
+        ...prev,
+        totalElements: filteredEmployees.length,
+      }));
+    } catch (error) {
+      console.error(error);
+      setEmployees([]);
+    }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -105,7 +121,7 @@ const Employees: React.FC = () => {
         hasPrevious,
       } = response.data;
 
-      const totalPages = Math.ceil(totalElements / size - 1);
+      const totalPages = Math.ceil(totalElements / size);
 
       setEmployees(employeeOverviewResponse);
       setPagination({
@@ -134,7 +150,7 @@ const Employees: React.FC = () => {
     ADMIN: "관리자",
   };
 
-  const employeesTableRows = filteredEmployees.map((employee) => [
+  const employeesTableRows = employees.map((employee) => [
     employee.employeeNumber,
     employee.name,
     employee.department,
