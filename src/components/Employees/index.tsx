@@ -42,8 +42,8 @@ const departmentCodes: { [key: string]: string } = {
 const Employees: React.FC = () => {
   const [employees, setEmployees] = useState<EmployeeOverview[]>([]);
   const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
+    currentPage: 0,
+    totalPages: 0,
     totalElements: 0,
     hasNext: false,
     hasPrevious: false,
@@ -67,7 +67,7 @@ const Employees: React.FC = () => {
     if (debouncedSearchTerm) {
       searchEmployees(debouncedSearchTerm);
     } else {
-      loadAllEmployees(1);
+      loadAllEmployees(0);
     }
   }, [debouncedSearchTerm]);
 
@@ -82,7 +82,7 @@ const Employees: React.FC = () => {
       );
 
       setEmployees(filteredEmployees);
-      console.log(filteredEmployees);
+      // console.log(filteredEmployees);
 
       setPagination((prev) => ({
         ...prev,
@@ -101,7 +101,7 @@ const Employees: React.FC = () => {
   const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => {
     setPagination((prev) => ({
       ...prev,
-      currentPage: newPage,
+      currentPage: newPage - 1,
     }));
   };
 
@@ -339,7 +339,7 @@ const Employees: React.FC = () => {
       <Table headers={employeesTableHeaders} rows={employeesTableRows} />
       <Pagination
         count={pagination.totalPages}
-        page={pagination.currentPage}
+        page={pagination.currentPage + 1}
         onChange={handlePageChange}
         color="primary"
         sx={{ alignSelf: "center" }}
