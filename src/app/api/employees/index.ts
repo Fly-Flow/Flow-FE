@@ -1,16 +1,24 @@
-import { Employee } from "@/types/Employee";
 import axiosInstance from "../axiosInstance";
 
-interface EmployeeInfo {
-  status: string;
-  message: string;
+export interface EmployeeInfo {
   data: {
-    employeeDetails: Employee[];
+    employeeOverviewResponse: EmployeeOverview[];
     currentPageNumber: number;
     totalElements: number;
-    hasNext: boolean;
+    remainingDataCount: number;
+    hasContent: boolean;
     hasPrevious: boolean;
+    hasNext: boolean;
   };
+}
+
+export interface EmployeeOverview {
+  employeeNumber: string;
+  name: string;
+  department: string;
+  position: string;
+  joinDate: string;
+  role: string;
 }
 
 export const fetchAllEmployees = async (
@@ -20,6 +28,29 @@ export const fetchAllEmployees = async (
   try {
     const response = await axiosInstance.get<EmployeeInfo>(
       `/api/admin/employees?size=${size}&page=${page}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addEmployee = async (newEmployee: any) => {
+  try {
+    const response = await axiosInstance.post(
+      `/api/admin/employees`,
+      newEmployee
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchEmployeesByName = async (name: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/api/admin/employees?name=${name}`
     );
     return response.data;
   } catch (error) {

@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   FormGroup,
+  Pagination,
   SelectChangeEvent,
   Stack,
   TextField,
@@ -19,10 +20,14 @@ import Chip from "@/components/shared/Chip/index.tsx";
 import Table from "@/components/shared/Table/index.tsx";
 import SearchField from "../shared/SearchField";
 import SelectField from "../shared/SelectField";
-import axiosInstance from "@/app/api/axiosInstance";
 
-import { Employee } from "@/types/Employee";
-import { fetchAllEmployees } from "@/app/api/employees";
+import {
+  addEmployee,
+  EmployeeOverview,
+  fetchAllEmployees,
+  fetchEmployeesByName,
+} from "@/app/api/employees";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const companyCode = "6731";
 
@@ -35,16 +40,18 @@ const departmentCodes: { [key: string]: string } = {
 };
 
 const Employees: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<EmployeeOverview[]>([]);
   const [pagination, setPagination] = useState({
-    currentPage: 1,
+    currentPage: 0,
+    totalPages: 0,
     totalElements: 0,
     hasNext: false,
     hasPrevious: false,
   });
-  const size = 1;
+  const size = 10;
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const [isAddEmployeesDialogOpen, setIsAddEmployeesDialogOpen] =
     useState(false);
 
@@ -56,54 +63,73 @@ const Employees: React.FC = () => {
     employeeNumber: "",
   });
 
-  // debounce
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 1800);
+    if (debouncedSearchTerm) {
+      searchEmployees(debouncedSearchTerm);
+    } else {
+      loadAllEmployees(0);
+    }
+  }, [debouncedSearchTerm]);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [searchTerm]);
+  const searchEmployees = async (name: string) => {
+    try {
+      const response = await fetchEmployeesByName(name);
 
-  const filteredEmployees = employees.filter((employee) =>
-    employee.name.includes(debouncedSearchTerm)
-  );
+      const employeesData = response.data.employeeOverviewResponse;
+      // console.log(employeesData);
+
+      const filteredEmployees = employeesData.filter(
+        (employee: EmployeeOverview) => employee.name.includes(name)
+      );
+
+      setEmployees(filteredEmployees);
+      // console.log(filteredEmployees);
+    } catch (error) {
+      console.error(error);
+      setEmployees([]);
+    }
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
-  const loadEmployees = async (page: number) => {
+  const handlePageChange = (e: React.ChangeEvent<unknown>, newPage: number) => {
+    setPagination((prev) => ({
+      ...prev,
+      currentPage: newPage - 1,
+    }));
+  };
+
+  useEffect(() => {
+    loadAllEmployees(pagination.currentPage);
+  }, [pagination.currentPage]);
+
+  const loadAllEmployees = async (page: number) => {
     try {
       const response = await fetchAllEmployees(size, page);
+
       const {
-        employeeDetails,
+        employeeOverviewResponse,
         currentPageNumber,
         totalElements,
         hasNext,
         hasPrevious,
       } = response.data;
 
-      setEmployees(employeeDetails);
+      const totalPages = Math.ceil(totalElements / size);
+
+      setEmployees(employeeOverviewResponse);
       setPagination({
         currentPage: currentPageNumber,
         totalElements,
+        totalPages,
         hasNext,
         hasPrevious,
       });
     } catch (error) {
       console.error(error);
     }
-  };
-
-  useEffect(() => {
-    loadEmployees(1);
-  }, []);
-
-  const handlePageChange = (newPage: number) => {
-    loadEmployees(newPage);
   };
 
   const employeesTableHeaders = [
@@ -115,13 +141,21 @@ const Employees: React.FC = () => {
     "권한",
   ];
 
-  const employeesTableRows = filteredEmployees.map((employee) => [
+  const roleMapping: { [key: string]: string } = {
+    EMPLOYEE: "사원",
+    ADMIN: "관리자",
+  };
+
+  const employeesTableRows = employees.map((employee) => [
     employee.employeeNumber,
     employee.name,
     employee.department,
     employee.position,
     employee.joinDate,
-    <Chip label={employee.role} key={employee.employeeNumber} />,
+    <Chip
+      label={roleMapping[employee.role] || employee.role}
+      key={employee.employeeNumber}
+    />,
   ]);
 
   const openDialog = () => {
@@ -150,10 +184,11 @@ const Employees: React.FC = () => {
 
   const generateEmployeeNumber = () => {
     const departmentCode = departmentCodes[newEmployee.department] || "000"; // 부서 코드
-    const employeeCount = employees.length + 1; // 현재 사원 수 기반 증가 값
-    const employeeCountPadded = employeeCount.toString().padStart(3, "0"); // 3자리로 맞춤
+    const employeeCount = (pagination.totalElements + 1)
+      .toString()
+      .padStart(3, "0"); // 현재 사원 수 기반 증가 + 1
 
-    return `${companyCode}${departmentCode}${employeeCountPadded}`;
+    return `${companyCode}${departmentCode}${employeeCount}`;
   };
 
   const addNewEmployee = async () => {
@@ -182,24 +217,18 @@ const Employees: React.FC = () => {
       role: newEmployee.position === "리드" ? "관리자" : "사원",
     };
 
-    // try {
-    //   const response = await axiosInstance.post("api/admin/employees", newEmp);
-    //   console.log("API response:", response);
+    try {
+      const response = await addEmployee(newEmp);
 
-    //   if (response) {
-    //     // setEmployees((prevEmployees) => [...prevEmployees, newEmp]);
-    //     setEmployees((prevEmployees) => {
-    //       const updatedEmployees = [...prevEmployees, newEmp];
-    //       console.log("Updated employees list:", updatedEmployees);
-    //       return updatedEmployees;
-    //     });
-    //     alert("구성원이 추가되었습니다.");
-    //   } else {
-    //     alert("구성원 추가에 실패했습니다.");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
+      if (response) {
+        setEmployees((prevEmployees) => [...prevEmployees, newEmp]);
+        alert("구성원이 추가되었습니다.");
+      } else {
+        alert("구성원 추가에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     closeDialog();
     setIsAddEmployeesDialogOpen(false);
@@ -304,6 +333,13 @@ const Employees: React.FC = () => {
       {renderToolbar()}
       {renderAddEmployeesDialog()}
       <Table headers={employeesTableHeaders} rows={employeesTableRows} />
+      <Pagination
+        count={pagination.totalPages}
+        page={pagination.currentPage + 1}
+        onChange={handlePageChange}
+        color="primary"
+        sx={{ alignSelf: "center" }}
+      />
     </Stack>
   );
 };
