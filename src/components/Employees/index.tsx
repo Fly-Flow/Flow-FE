@@ -75,7 +75,8 @@ const Employees: React.FC = () => {
     try {
       const response = await fetchEmployeesByName(name);
 
-      const employeesData = response.data.employeeOverviewResponse || [];
+      const employeesData = response.data.employeeOverviewResponse;
+      // console.log(employeesData);
 
       const filteredEmployees = employeesData.filter(
         (employee: EmployeeOverview) => employee.name.includes(name)
@@ -83,11 +84,6 @@ const Employees: React.FC = () => {
 
       setEmployees(filteredEmployees);
       // console.log(filteredEmployees);
-
-      setPagination((prev) => ({
-        ...prev,
-        totalElements: filteredEmployees.length,
-      }));
     } catch (error) {
       console.error(error);
       setEmployees([]);
