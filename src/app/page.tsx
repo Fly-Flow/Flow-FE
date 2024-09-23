@@ -1,22 +1,32 @@
 "use client";
 
-import Header from "@/components/shared/Header";
-import SideBar from "@/components/shared/SideBar";
-import { Box } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 
 export default function Home() {
   return (
     <>
-      <SideBar />
-      <Box
-        component="main"
-        sx={{
-          marginLeft: "14rem",
-          padding: "1rem",
-        }}
+      <Button variant="contained">안녕하시와요?</Button>
+      <Button variant="contained" color="secondary">
+        안녕하시와요?
+      </Button>
+      <Button variant="contained" sx={{ backgroundColor: "primary.dark" }}>
+        안녕하시와요?
+      </Button>
+      <Button
+        variant="contained"
+        sx={{ backgroundColor: "common.white", color: "common.black" }}
       >
-        <Header label="홈" />
-      </Box>
+        안녕하시와요?
+      </Button>
+      <Chip
+        variant="outlined"
+        label="결근"
+        sx={{
+          backgroundColor: "error.light",
+          borderColor: "error.main",
+          color: "error.main",
+        }}
+      />
     </>
   );
 }
