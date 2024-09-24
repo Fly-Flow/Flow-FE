@@ -2,6 +2,7 @@
 
 import theme from "@/styles/theme.ts";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { CookiesProvider } from "react-cookie";
 
 export default function RootLayout({
   children,
@@ -11,10 +12,12 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
+        <CookiesProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </CookiesProvider>
       </body>
     </html>
   );
