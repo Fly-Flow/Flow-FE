@@ -3,7 +3,6 @@
 import Logo from "@/components/Logo/index.tsx";
 import {
   Box,
-  Button,
   Drawer,
   List,
   ListItem,
@@ -11,6 +10,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
+import LogoutButton from "../LogoutButton";
 
 const SideBar: React.FC = (props) => {
   const router = useRouter();
@@ -117,20 +117,7 @@ const SideBar: React.FC = (props) => {
         </ListItem>
       </List>
 
-      <Button
-        variant="contained"
-        sx={{
-          margin: "2rem",
-          color: "primary.dark",
-          backgroundColor: "secondary.main",
-          "&:hover": {
-            color: "white",
-          },
-        }}
-        onClick={() => router.push("/login")}
-      >
-        로그아웃
-      </Button>
+      <LogoutButton />
     </Box>
   );
   return (

@@ -3,6 +3,7 @@ import axios from "axios";
 
 // env 환경변수 설정
 const BASE_URL = "/";
+const token = getCookie("flow_token");
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -10,20 +11,8 @@ const axiosInstance = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
 });
-
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = getCookie("authToken");
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 export default axiosInstance;

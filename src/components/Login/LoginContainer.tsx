@@ -36,10 +36,10 @@ const Login = () => {
       const response = await loginRequest({ employeeNumber, password });
       console.log(response);
       if (response.status === 200) {
-        // setCookie("authToken", response.data.accessToken, {
-        //   path: "/",
-        //   maxAge: 3600,
-        // });
+        setCookie("flow_token", response.data.accessToken, {
+          path: "/",
+          maxAge: 3600,
+        });
         successAlert("로그인 성공", "로그인에 성공했습니다.", "확인");
 
         router.push("/");
