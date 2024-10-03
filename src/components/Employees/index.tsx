@@ -28,7 +28,6 @@ import {
   fetchEmployeesByName,
 } from "@/app/api/employees";
 import { useDebounce } from "@/hooks/useDebounce";
-import { toNamespacedPath } from "path/posix";
 
 const companyCode = "6731";
 
@@ -75,8 +74,14 @@ const Employees: React.FC = () => {
   const searchEmployees = async (name: string) => {
     try {
       const response = await fetchEmployeesByName(name);
+      console.log(response);
 
-      const employeesData = response.data?.employeeOverviewResponse;
+      const employeeDetails = response.data?.employeeDetails || [];
+
+      const employeesData = employeeDetails.map(
+        (detail: any) => detail.employeeOverviewResponse
+      );
+      console.log("Row data:", employeesData);
 
       const employeesArray = Array.isArray(employeesData)
         ? employeesData
@@ -85,8 +90,8 @@ const Employees: React.FC = () => {
       const filteredEmployees = employeesArray.filter(
         (employee: EmployeeOverview) => employee.name.includes(name)
       );
-
       setEmployees(filteredEmployees);
+      console.log("filtered data:", filteredEmployees);
     } catch (error) {
       console.error(error);
       setEmployees([]);
