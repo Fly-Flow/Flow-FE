@@ -49,9 +49,9 @@ export const addEmployee = async (newEmployee: any) => {
 
 export const fetchEmployeesByName = async (name: string) => {
   try {
-    const response = await axiosInstance.get(
-      `/api/admin/employees?name=${name}`
-    );
+    const response = await axiosInstance.get(`/api/admin/employees/search`, {
+      params: { name: name },
+    });
     return response.data;
   } catch (error) {
     throw error;
