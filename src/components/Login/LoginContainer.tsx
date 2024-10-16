@@ -52,20 +52,6 @@ const Login = () => {
         );
       }
     } catch (error: any) {
-      if (error.response) {
-        // 서버가 응답을 반환했지만 상태 코드가 2xx가 아님
-        warningAlert("로그인 오류", error.response.data.error, "확인");
-      } else if (error.request) {
-        // 요청이 만들어졌으나 응답을 받지 못함
-        warningAlert(
-          "로그인 오류",
-          "서버 응답이 없습니다. 나중에 다시 시도해주세요.",
-          "확인"
-        );
-      } else {
-        // 요청 설정 중 오류 발생
-        warningAlert("로그인 오류", "로그인 중 오류가 발생했습니다.", "확인");
-      }
       console.log("로그인 중 오류 발생:", error);
     }
   };
