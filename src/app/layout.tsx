@@ -2,6 +2,7 @@
 
 import theme from "@/styles/theme.ts";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { RecoilRoot } from "recoil";
 
 export default function RootLayout({
   children,
@@ -12,8 +13,10 @@ export default function RootLayout({
     <html>
       <body>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
+          <RecoilRoot>
+            <CssBaseline />
+            {children}
+          </RecoilRoot>
         </ThemeProvider>
       </body>
     </html>
